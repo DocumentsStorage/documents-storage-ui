@@ -1,0 +1,84 @@
+<script>
+  import { createForm } from "svelte-forms-lib";
+  import * as yup from "yup";
+
+  import Cookies from 'universal-cookie';
+  import { navigate } from "svelte-routing";
+  import { SendHTTPrequest } from "../services/api"
+
+  const cookies = new Cookies();
+	const sessionToken = cookies.get("authToken");
+	if (sessionToken) {
+    navigate("/dashboard", { replace: true });
+	}
+
+
+  const { form, errors, state, handleChange, handleSubmit: handleLogin } = createForm({
+    initialValues: {
+      username: "",
+      password: "",
+    },
+    validationSchema: yup.object().shape({
+      username: yup.string().min(1).required(),
+      password: yup.string().min(3).required()
+      }),
+    onSubmit: async(values) => {
+      const response = await SendHTTPrequest({
+        endpoint: '/token',
+        method: 'post',
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded'
+        },
+        data: `username=${values.username}&password=${values.password}`
+      });
+      if(response.status === 200){
+        const cookies = new Cookies();
+        cookies.set('authToken', response.data.access_token, {sameSite: 'strict'});
+        navigate("/dashboard", { replace: true });
+      }
+    },
+  });
+</script>
+
+<div
+  class="w-1/3 mt-5 rounded-md shadow-lg dark:bg-gray-800 flex justify-center"
+>
+  <form on:submit={handleLogin} class="grid gap-5 grid-cols-3 my-5">
+    <h1 class="text-2xl col-span-3">Login</h1>
+    <div class="col-span-3">
+      <label class="my-2" for="username">Username</label>
+      <input
+        id="username"
+        name="username"
+        autocomplete="username"
+        class="w-full dark:bg-gray-900 font-bold px-2"
+        on:change={handleChange}
+        bind:value={$form.username}
+      />
+    </div>
+    <small class="col-span-3 h-5">
+      {#if $errors.username}
+    {$errors.username}
+    {/if}
+  </small>
+
+    <div class="col-span-3">
+      <label class="my-2" for="password">Password</label>
+      <input
+        id="password"
+        name="password"
+        autocomplete="new-password"
+        type="password"
+        class="w-full dark:bg-gray-900 px-2"
+        on:change={handleChange}
+        bind:value={$form.password}
+      />
+    </div>
+    <small class="col-span-3 h-5">
+      {#if $errors.password}
+    {$errors.password}
+    {/if}
+  </small>
+    <input type="submit" class="dark:bg-gray-800 dark:active:bg-gray-900 dark:text-white rounded-lg shadow-md py-2 px-5 col-start-3" value="Login"/>
+  </form>
+</div>
