@@ -1,5 +1,5 @@
 import Cookies from 'universal-cookie';
-const API_ENDPOINT = "http://localhost:8000";
+export const API_ENDPOINT = API_URL;
 
 const binaryContentTypesToBeSaved = [
   'image/png', 'image/jpeg', 'image/jpg', 'application/x-tar'
