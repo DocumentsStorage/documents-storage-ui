@@ -3,7 +3,8 @@
 	import Cookies from "universal-cookie";
 
 	import Notification from "./components/Notification.svelte";
-	import Button from "./common/button.svelte";
+	import Button from "./common/Button.svelte";
+	import ModLink from "./common/ModLink.svelte";
 	import Login from "./routes/Login.svelte";
 	import Account from "./routes/account/Account.svelte";
 	import Documents from "./routes/documents/Documents.svelte";
@@ -12,6 +13,7 @@
 	import { onMount } from "svelte";
 
 	export let url = "";
+	export let showSettings = false;
 	export let isLogged = false;
 
 	logged.subscribe((value) => {
@@ -43,6 +45,7 @@
 				<p class="dark:text-white text-3xl font-bold">
 					Documents Storage
 				</p>
+
 				<!-- Routes -->
 				<nav>
 					{#if !isLogged}
@@ -50,10 +53,78 @@
 					{/if}
 					{#if isLogged}
 						<Link to="/documents"><Button>Documents</Button></Link>
-						<Link to="/account"><Button>Account</Button></Link>
-						<span on:click={() => logout()}
-							><Button><i class="ph-sign-out" /></Button></span
-						>
+						<div class="relative inline-block text-left">
+							<div>
+								<span
+									on:click={() =>
+										(showSettings = !showSettings)}
+								>
+									<Button
+										type="button"
+										id="menu-button"
+										aria-expanded="true"
+										aria-haspopup="true"
+									>
+										Settings
+									</Button>
+								</span>
+							</div>
+							{#if showSettings}
+								<div
+									class="origin-top-right absolute right-0 mt-2 w-56 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 focus:outline-none dark:bg-gray-800"
+									role="menu"
+									aria-orientation="vertical"
+									aria-labelledby="menu-button"
+									tabindex="-1"
+								>
+									<div class="py-1" role="none">
+										<span
+											role="menuitem"
+											tabindex="-1"
+											id="menu-item-0"
+											class="block my-2"
+										>
+											<Link to="/account">
+												<ModLink>
+													<i
+														class="ph-user mr-2"
+													/>Account details
+												</ModLink>
+											</Link>
+										</span>
+										<span
+											role="menuitem"
+											tabindex="-1"
+											id="menu-item-1"
+											class="block my-2"
+										>
+											<a
+												href="https://github.com/DocumentsStorage"
+												><ModLink
+													><i
+														class="ph-lifebuoy mr-2"
+													/>App support</ModLink
+												></a
+											>
+										</span>
+										<div class="py-1" role="none">
+											<span
+												on:click={() => logout()}
+												role="menuitem"
+												tabindex="-1"
+												id="menu-item-2"
+												class="block my-2"
+												><ModLink
+													><i
+														class="ph-sign-out mr-2 ml-1"
+													/>Sign out</ModLink
+												></span
+											>
+										</div>
+									</div>
+								</div>
+							{/if}
+						</div>
 					{/if}
 				</nav>
 			</div>
@@ -82,5 +153,8 @@
 
 	nav > * {
 		margin: 0 1rem;
+	}
+	nav a:hover {
+		text-decoration: none;
 	}
 </style>
