@@ -102,7 +102,7 @@ const fetchMethod = async (url, initialFetchConfig, timeout = 5000, debug = fals
     }
   
     try {
-      const responseObject = await fetchMethod(url, fetchConfig, requestConfig.timeout);
+      const responseObject = await fetchMethod(url, fetchConfig, requestConfig.timeout, requestConfig.debug);
       return responseObject;
     } catch (error) {
       return error;

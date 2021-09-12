@@ -19,7 +19,7 @@
     onSubmit: async(values) => {
       const response = await SendHTTPrequest({
         endpoint: '/token',
-        method: 'post',
+        method: 'POST',
         headers: {
           'Content-Type': 'application/x-www-form-urlencoded'
         },
