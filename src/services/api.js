@@ -1,5 +1,5 @@
 import Cookies from 'universal-cookie';
-const API_ENDPOINT = "http://localhost:8000";
+export const API_ENDPOINT = API_URL;
 
 const binaryContentTypesToBeSaved = [
   'image/png', 'image/jpeg', 'image/jpg', 'application/x-tar'
@@ -102,7 +102,7 @@ const fetchMethod = async (url, initialFetchConfig, timeout = 5000, debug = fals
     }
   
     try {
-      const responseObject = await fetchMethod(url, fetchConfig, requestConfig.timeout);
+      const responseObject = await fetchMethod(url, fetchConfig, requestConfig.timeout, requestConfig.debug);
       return responseObject;
     } catch (error) {
       return error;

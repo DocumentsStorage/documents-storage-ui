@@ -1,16 +1,10 @@
 <script>
   import { createForm } from "svelte-forms-lib";
   import * as yup from "yup";
-
-  import Cookies from 'universal-cookie';
   import { navigate } from "svelte-routing";
+  import Cookies from 'universal-cookie';
   import { SendHTTPrequest } from "../services/api"
-
-  const cookies = new Cookies();
-	const sessionToken = cookies.get("authToken");
-	if (sessionToken) {
-    navigate("/dashboard", { replace: true });
-	}
+  import { logged } from "../services/route-guard";
 
 
   const { form, errors, state, handleChange, handleSubmit: handleLogin } = createForm({
@@ -25,7 +19,7 @@
     onSubmit: async(values) => {
       const response = await SendHTTPrequest({
         endpoint: '/token',
-        method: 'post',
+        method: 'POST',
         headers: {
           'Content-Type': 'application/x-www-form-urlencoded'
         },
@@ -34,7 +28,8 @@
       if(response.status === 200){
         const cookies = new Cookies();
         cookies.set('authToken', response.data.access_token, {sameSite: 'strict'});
-        navigate("/dashboard", { replace: true });
+        logged.set(true)
+        navigate("/documents", { replace: true });
       }
     },
   });
