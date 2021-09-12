@@ -4,6 +4,7 @@
   import jwt_decode from "jwt-decode";
   import Cookies from "universal-cookie";
   import { SendHTTPrequest } from "../../services/api";
+  import notificationStore from "../../components/NotificationStore.js";
 
   const {
     form,
@@ -31,13 +32,19 @@
         data: {
           id: jwt_decode(cookies.get("authToken")).client_id,
           password: values.password,
-          new_password: values.password,
+          new_password: values.new_password,
         },
       });
       if (response.status === 200) {
-        
-      } else {
-        
+        notificationStore.set({
+          message: "Updated successfully",
+          type: "SUCCESS",
+        });
+      } else if (response.status > 400 && response.status < 500) {
+        notificationStore.set({
+          message: "Could not change account data",
+          type: "ERROR",
+        });
       }
     },
   });

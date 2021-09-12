@@ -1,43 +1,48 @@
 <script>
 	import { Router, Link, Route, navigate } from "svelte-routing";
 	import Cookies from "universal-cookie";
-	import Button from './common/button.svelte'
+
+	import Notification from "./components/Notification.svelte";
+	import Button from "./common/button.svelte";
 	import Login from "./routes/Login.svelte";
 	import Account from "./routes/account/Account.svelte";
 	import Documents from "./routes/documents/Documents.svelte";
+
 	import { checkRoute, logged } from "./services/route-guard";
 	import { onMount } from "svelte";
 
 	export let url = "";
 	export let isLogged = false;
-	
-	logged.subscribe(value => {
+
+	logged.subscribe((value) => {
 		isLogged = value;
 	});
 
-	function logout(){
+	function logout() {
 		const cookies = new Cookies();
-		cookies.remove("authToken")
-		logged.set(false)
-		navigate("/", {replace: true})
+		cookies.remove("authToken");
+		logged.set(false);
+		navigate("/", { replace: true });
 	}
 
 	// Routing guards
-	onMount(()=> {
+	onMount(() => {
 		const cookies = new Cookies();
-		cookies.get("authToken") && logged.set(true)
-		checkRoute()
-	})
-	
+		cookies.get("authToken") && logged.set(true);
+		checkRoute();
+	});
 </script>
 
 <main
 	class="min-h-screen min-w-screen dark:text-dark dark:bg-gray-800 dark:text-white"
 >
+	<Notification />
 	<Router {url}>
 		<div class="shadow-lg">
 			<div class="flex justify-between items-center p-5 mx-4">
-				<p class="dark:text-white text-3xl font-bold">Documents Storage</p>
+				<p class="dark:text-white text-3xl font-bold">
+					Documents Storage
+				</p>
 				<!-- Routes -->
 				<nav>
 					{#if !isLogged}
@@ -46,7 +51,9 @@
 					{#if isLogged}
 						<Link to="/documents"><Button>Documents</Button></Link>
 						<Link to="/account"><Button>Account</Button></Link>
-						<span on:click={()=>logout()}><Button><i class="ph-sign-out"></i></Button></span>
+						<span on:click={() => logout()}
+							><Button><i class="ph-sign-out" /></Button></span
+						>
 					{/if}
 				</nav>
 			</div>
@@ -73,7 +80,7 @@
 	@tailwind components;
 	@tailwind utilities;
 
-	nav > *{
+	nav > * {
 		margin: 0 1rem;
 	}
 </style>

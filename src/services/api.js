@@ -1,4 +1,6 @@
 import Cookies from 'universal-cookie';
+import notificationStore from '../components/NotificationStore.js'
+
 export const API_ENDPOINT = API_URL;
 
 const binaryContentTypesToBeSaved = [
@@ -103,6 +105,12 @@ const fetchMethod = async (url, initialFetchConfig, timeout = 5000, debug = fals
   
     try {
       const responseObject = await fetchMethod(url, fetchConfig, requestConfig.timeout, requestConfig.debug);
+      if(responseObject.status === 503){
+        notificationStore.set({
+          message: "Could not connect to remote server, try again",
+          type: "ERROR",
+        })
+      }
       return responseObject;
     } catch (error) {
       return error;
