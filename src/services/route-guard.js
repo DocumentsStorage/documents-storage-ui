@@ -1,11 +1,16 @@
 import { navigate } from "svelte-routing";
 import { writable } from 'svelte/store';
 
-export const logged = writable(false);
+export const sessionInfo = writable({
+    isLogged: false,
+    client_id: "",
+    rank: "",
+    exp: ""
+});
 
 export function checkRoute(){
-    let isLogged = false 
-    logged.subscribe((value)=> isLogged = value)
+    let isLogged = false
+    sessionInfo.subscribe((value)=> isLogged = value.isLogged)
     if (isLogged) {
         if(window.location.pathname === "/"){
             navigate("/documents", { replace: true });

@@ -4,8 +4,9 @@
   import { navigate } from "svelte-routing";
   import Cookies from "universal-cookie";
   import { SendHTTPrequest } from "../services/api";
-  import { logged } from "../services/route-guard";
+  import { sessionInfo } from "../services/route-guard";
   import notificationStore from "../components/NotificationStore.js";
+  import jwt_decode from "jwt-decode";
 
   const {
     form,
@@ -36,7 +37,11 @@
         cookies.set("authToken", response.data.access_token, {
           sameSite: "strict",
         });
-        logged.set(true);
+        const currentSessionInfo = jwt_decode(response.data.access_token)
+        console.log(currentSessionInfo)
+        if (currentSessionInfo){
+          sessionInfo.set({isLogged: true, ...currentSessionInfo});
+        }
         navigate("/documents", { replace: true });
       } else if (response.status > 400 && response.status < 500) {
         notificationStore.set({

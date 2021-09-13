@@ -8,12 +8,12 @@
     function showNotificationCall(message, type) {
         if (message.length > 0) {
             showNotification = true;
+            notificationType = type;
+            notificationMessage = message;
+            setTimeout(() => {
+                showNotification = false;
+            }, 4500);
         }
-        notificationType = type;
-        notificationMessage = message;
-        setTimeout(() => {
-            showNotification = false;
-        }, 4500);
     }
 
     notificationStore.subscribe((value) => {

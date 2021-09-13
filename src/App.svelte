@@ -8,29 +8,40 @@
 	import Login from "./routes/Login.svelte";
 	import Account from "./routes/account/Account.svelte";
 	import Documents from "./routes/documents/Documents.svelte";
+	import Manage from "./routes/manage/Manage.svelte";
+	import jwt_decode from "jwt-decode";
 
-	import { checkRoute, logged } from "./services/route-guard";
+	import { checkRoute, sessionInfo } from "./services/route-guard";
 	import { onMount } from "svelte";
 
 	export let url = "";
 	export let showSettings = false;
 	export let isLogged = false;
+	export let rank = "";
 
-	logged.subscribe((value) => {
-		isLogged = value;
+	sessionInfo.subscribe((value) => {
+		isLogged = value.isLogged;
+		rank = value.rank;
 	});
 
 	function logout() {
 		const cookies = new Cookies();
 		cookies.remove("authToken");
-		logged.set(false);
+		sessionInfo.set({ isLogged: false });
 		navigate("/", { replace: true });
 	}
 
 	// Routing guards
 	onMount(() => {
 		const cookies = new Cookies();
-		cookies.get("authToken") && logged.set(true);
+		try {
+			const currentSessionInfo = jwt_decode(cookies.get("authToken"));
+			if (currentSessionInfo.exp > Date.now()/1000) {
+				sessionInfo.set({ isLogged: true, ...currentSessionInfo });
+			} else {
+				cookies.remove("authToken");
+			}
+		} catch {}
 		checkRoute();
 	});
 </script>
@@ -59,12 +70,7 @@
 									on:click={() =>
 										(showSettings = !showSettings)}
 								>
-									<Button
-										type="button"
-										id="menu-button"
-										aria-expanded="true"
-										aria-haspopup="true"
-									>
+									<Button>
 										Settings
 									</Button>
 								</span>
@@ -92,10 +98,26 @@
 												</ModLink>
 											</Link>
 										</span>
+										{#if rank === "admin"}
 										<span
 											role="menuitem"
 											tabindex="-1"
 											id="menu-item-1"
+											class="block my-2"
+										>
+											<Link to="/manage">
+												<ModLink>
+													<i
+														class="ph-table mr-2"
+													/>Manage
+												</ModLink>
+											</Link>
+										</span>
+										{/if}
+										<span
+											role="menuitem"
+											tabindex="-1"
+											id="menu-item-2"
 											class="block my-2"
 										>
 											<a
@@ -112,7 +134,7 @@
 												on:click={() => logout()}
 												role="menuitem"
 												tabindex="-1"
-												id="menu-item-2"
+												id="menu-item-3"
 												class="block my-2"
 												><ModLink
 													><i
@@ -133,6 +155,7 @@
 			<Route path="/"><Login /></Route>
 			<Route path="/documents"><Documents /></Route>
 			<Route path="/account"><Account /></Route>
+			<Route path="/manage"><Manage /></Route>
 		</div>
 	</Router>
 </main>
