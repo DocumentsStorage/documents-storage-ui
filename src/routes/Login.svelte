@@ -20,8 +20,8 @@
       password: "",
     },
     validationSchema: yup.object().shape({
-      username: yup.string().min(1).required(),
-      password: yup.string().min(3).required(),
+      username: yup.string().required(),
+      password: yup.string().required(),
     }),
     onSubmit: async (values) => {
       const response = await SendHTTPrequest({
