@@ -1,6 +1,5 @@
 <script>
 </script>
 
-<div class="flex justify-center dark:bg-black">
-    <p>List</p>
+<div class="rounded-md shadow-lg">
 </div>
