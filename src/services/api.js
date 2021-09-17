@@ -4,7 +4,7 @@ import notificationStore from '../components/NotificationStore.js'
 export const API_ENDPOINT = API_URL;
 
 const binaryContentTypesToBeSaved = [
-  'image/png', 'image/jpeg', 'image/jpg', 'application/x-tar'
+  'image/png', 'image/jpeg', 'image/jpg', 'application/x-tar', 'application/pdf'
 ];
 
 const getBearerToken = async () => {
@@ -60,7 +60,7 @@ const fetchMethod = async (url, initialFetchConfig, timeout = 5000, debug = fals
     const responseObject = {
       status: response.status,
       statusText: response.statusText,
-      headers: JSON.stringify(response.headers),
+      headers: response.headers,
       data: await parseData(response, response.headers, debug),
     };
 

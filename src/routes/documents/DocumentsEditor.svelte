@@ -4,86 +4,122 @@
     import { SendHTTPrequest } from "../../services/api";
     import notificationStore from "../../components/NotificationStore.js";
     import Button from "../../common/Button.svelte";
+    import MediaFilesBox from "./MediaFilesBox.svelte";
+    import generatePdfThumbnails from "pdf-thumbnails-generator";
 
-    export let allDocument;
+    export let allDocuments;
     export let currentDocument = null;
-    export let imagesList = []; 
+    export let mediaThumbnailsList = [];
+    export let mediaFilesList = [];
 
     function resetForm() {
         $form.title = null;
         $form.description = null;
         $form.fields = [
             {
-                name: "",
+                name: "xxx",
                 value: "",
             },
         ];
-        currentDocument = null;
+        for (const mediaBlob of mediaThumbnailsList) {
+            URL.revokeObjectURL(mediaBlob);
+        }
+        mediaFilesList = [];
+        mediaThumbnailsList = [];
     }
 
     $: currentDocument, loadDocument();
 
-    function loadDocument() {
-        if (currentDocument?.fields?.length > 0) {
-            $form.title = currentDocument.title;
-            $form.description = currentDocument.description;
-            $form.fields = [];
-            for (
-                let index = 0;
-                index < currentDocument.fields.length;
-                index++
-            ) {
-                const element = currentDocument.fields[index];
-                $form.fields.push({
-                    name: element.name,
-                    value: element.value,
+    async function createThumbnailPDF(blob) {
+        try {
+            const thumbnails = await generatePdfThumbnails(blob, 120);
+            return thumbnails[0];
+        } catch (err) {
+            // console.error(err);
+        }
+    }
+
+    async function createThumbnail(blob) {
+        if (blob.type === "application/pdf") {
+            const temp_url = URL.createObjectURL(blob);
+            const thumbnail = await createThumbnailPDF(temp_url);
+            const base64Response = await fetch(thumbnail.thumbnail);
+            blob = await base64Response.blob();
+        }
+        const url = URL.createObjectURL(blob);
+        mediaThumbnailsList = [...mediaThumbnailsList, url];
+    }
+
+    async function mediaConverter(event) {
+        let file;
+        event.detail ? (file = event.detail) : (file = event);
+        var blob = new Blob([file], { type: file.type });
+        mediaFilesList = [...mediaFilesList, file];
+        await createThumbnail(blob);
+    }
+
+    async function loadMediaFiles(media_files) {
+        return Promise.all(
+            await media_files.map(async (media_id) => {
+                const result = await SendHTTPrequest({
+                    endpoint: `/media/${media_id}`,
+                    method: "GET",
                 });
+                return result.data;
+            })
+        );
+    }
+
+    async function loadDocument() {
+        resetForm();
+        if (currentDocument) {
+            const blob_urls = await loadMediaFiles(currentDocument.media_files);
+            mediaFilesList = blob_urls;
+            for await (const blob_url of blob_urls) {
+                const response = await fetch(blob_url);
+                const data = await response.blob();
+                const blob = new Blob([data], {
+                    type: response.headers.get("content-type"),
+                });
+                createThumbnail(blob);
+            }
+            if (currentDocument.fields.length > 0) {
+                $form.title = currentDocument.title;
+                $form.description = currentDocument.description;
+                $form.fields = [];
+                for (
+                    let index = 0;
+                    index < currentDocument.fields.length;
+                    index++
+                ) {
+                    const element = currentDocument.fields[index];
+                    $form.fields.push({
+                        name: element.name,
+                        value: element.value,
+                    });
+                }
             }
         }
     }
 
-    async function uploadFile(file){
-        var data = new FormData()
-        data.append('media_file',file,file.name)
+    async function uploadFilesAPI() {
+        var data = new FormData();
+        for (var i = 0; i < mediaFilesList.length; i++) {
+            var file = mediaFilesList[i];
+            data.append("media_files", file, file.name);
+        }
         const response = await SendHTTPrequest({
             endpoint: "/media",
             method: "POST",
-            data: data
+            data: data,
         });
-    }
-
-    async function deleteFile(media_file_id){
-        const response = await SendHTTPrequest({
-            endpoint: `/media?media_file_id=${media_file_id}`,
-            method: "DELETE",
-        });
-    }
-
-    function dropHandler(event) {
-        if (event.dataTransfer.items) {
-            for (var i = 0; i < event.dataTransfer.items.length; i++) {
-                if (event.dataTransfer.items[i].kind === "file") {
-                    var file = event.dataTransfer.items[i].getAsFile();
-                    // TODO: Detect media file type, add pdf thumbnail generator
-                    var blob = new Blob([file], { type: "image/jpeg" });
-                    const url = URL.createObjectURL(blob);
-                    imagesList = [...imagesList, url];
-                }
-            }
-        } else {
-            for (var i = 0; i < event.dataTransfer.files.length; i++) {
-                console.log(
-                    "... file[" +
-                        i +
-                        "].name = " +
-                        event.dataTransfer.files[i].name
-                );
-            }
+        if (response.status === 200) {
+            return response.data.ids;
         }
     }
 
-    async function updateDocument(documentData) {
-        // TODO: Upload media files
+    async function updateDocumentAPI(documentData) {
+        const mediaFilesIDs = await uploadFilesAPI();
         const response = await SendHTTPrequest({
             endpoint: "/documents",
             method: "PUT",
@@ -97,11 +133,11 @@
                 message: "Updated successfully.",
                 type: "SUCCESS",
             });
-            allDocument.push({
+            allDocuments.push({
                 _id: { $oid: response.data.id.$oid },
                 ...documentData,
             });
-            allDocument = allDocument;
+            allDocuments = allDocuments;
         } else if (response.status > 400 && response.status < 500) {
             notificationStore.set({
                 message: "Could not update document.",
@@ -110,27 +146,27 @@
         }
     }
 
-    async function createDocument(documentData) {
-        // TODO: Upload media files
-
+    async function createDocumentAPI(documentData) {
+        const mediaFilesIDs = await uploadFilesAPI();
         const response = await SendHTTPrequest({
             endpoint: "/documents",
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
             },
-            data: documentData,
+            data: { ...documentData, media_files: mediaFilesIDs },
         });
         if (response.status === 200) {
             notificationStore.set({
                 message: "Added successfully.",
                 type: "SUCCESS",
             });
-            allDocument.push({
+            allDocuments.push({
                 _id: { $oid: response.data.id.$oid },
                 ...documentData,
+                media_files: mediaFilesIDs,
             });
-            allDocument = allDocument;
+            allDocuments = allDocuments;
         } else if (response.status > 400 && response.status < 500) {
             notificationStore.set({
                 message: "Could not add document.",
@@ -162,17 +198,15 @@
             fields: yup.array().of(
                 yup.object().shape({
                     name: yup.string().required("Name of field is required"),
-                    value: yup
-                        .string()
-                        .required("Value for field is required"),
+                    value: yup.string().required("Value for field is required"),
                 })
             ),
         }),
         onSubmit: async (values) => {
             if (!currentDocument) {
-                await createDocument(values);
+                await createDocumentAPI(values);
             } else {
-                await updateDocument({
+                await updateDocumentAPI({
                     id: currentDocument._id.$oid,
                     ...values,
                 });
@@ -203,6 +237,7 @@
         {#if currentDocument}
             <i
                 on:click={() => {
+                    currentDocument = null;
                     resetForm();
                 }}
                 class="ph-x"
@@ -244,37 +279,13 @@
         {/if}
     </small>
 
-    <div
-        id="drop_zone"
-        class="h-48 col-span-3 p-2 rounded items-center bg-gray-500 text-center"
-        on:dragover|preventDefault
-        on:drop|preventDefault={dropHandler}
-    >
-        <p class="text-lg">
-            Drag and drop one or more files (.jpg .jpeg .png .pdf)
-        </p>
-        <div
-            class="{imagesList.length === 0 &&
-                'justify-center'} flex overflow-x-auto flex-nowrap mt-5"
-        >
-            {#if imagesList.length > 0}
-                {#each imagesList as imageURL}
-                    <img
-                        class="h-32 rounded mx-2"
-                        src={imageURL}
-                        alt={imageURL}
-                    />
-                {/each}
-            {:else}
-                <div
-                    class="h-28 rounded text-xl px-5 bg-gray-400 flex items-center justify-center"
-                >
-                    Drop here
-                    <i class="ph-file-plus ml-3" />
-                </div>
-            {/if}
-        </div>
-    </div>
+    <MediaFilesBox
+        bind:mediaThumbnailsList
+        bind:mediaFilesList
+        on:convertMedia={(file) => {
+            mediaConverter(file);
+        }}
+    />
 
     <h1 class="text-2xl col-span-3">Fields</h1>
 
@@ -297,16 +308,14 @@
             </small>
 
             <div class="col-span-3">
-                <select
+                <input
                     name={`fields[${j}].value`}
+                    placeholder="Field value"
                     class="w-full dark:bg-gray-900 font-bold px-2 my-1"
                     on:change={handleChange}
+                    on:blur={handleChange}
                     bind:value={$form.fields[j].value}
-                >
-                    <option>text</option>
-                    <option>number</option>
-                    <option>date</option>
-                </select>
+                />
             </div>
             <small class="h-4 inline-block">
                 {#if $errors.fields[j]?.value}

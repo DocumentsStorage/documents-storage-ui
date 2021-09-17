@@ -1,9 +1,5 @@
-<span class="flex items-center pl-5 dark:text-white text-black hover:text-green-300">
-    <slot></slot>
+<span
+    class="flex items-center pl-5 dark:text-white text-black hover:text-green-300 cursor-pointer duration-300"
+>
+    <slot />
 </span>
-<style>
-    span {
-        cursor: pointer;
-        transition-duration: .3s;
-    }
-</style>

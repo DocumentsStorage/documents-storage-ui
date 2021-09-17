@@ -90,8 +90,8 @@
                             currentDocument = documentType;
                         }}
                     >
-                    <i class="ph-pencil-simple mx-2" />Update
-                        </span
+                        Select
+                    </span
                     >
                 </div>
             </li>
