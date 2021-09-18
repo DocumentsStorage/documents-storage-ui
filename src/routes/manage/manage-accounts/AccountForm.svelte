@@ -66,7 +66,6 @@
         message: "Updated account.",
         type: "SUCCESS",
       });
-      // allAccounts = allAccounts.map({_id: {$oid: response.data.id}, ...accountData})
       allAccounts = allAccounts.map((account) => {
         if (account._id.$oid === currentAccount._id.$oid) {
           return Object.assign(account, accountData);
@@ -90,7 +89,7 @@
     errors,
     state,
     handleChange,
-    handleSubmit: handleUpdateAccount,
+    handleSubmit: handleAccountSubmit,
   } = createForm({
     initialValues: {
       username: null,
@@ -103,7 +102,7 @@
       rank: yup.string().oneOf(["admin", "user"]).nullable(true),
     }),
     onSubmit: async (values) => {
-      if (values.password) {
+      if (!currentAccount) {
         await createAccount(values);
       } else {
         await updateAccount({ id: currentAccount._id.$oid, ...values });
@@ -113,7 +112,7 @@
 </script>
 
 <div class="mt-5 rounded-md shadow-lg dark:bg-gray-800 flex justify-center">
-  <form on:submit={handleUpdateAccount} class="grid gap-5 grid-cols-3 my-5">
+  <form on:submit={handleAccountSubmit} class="grid gap-5 grid-cols-3 my-5">
     <div class="w-full col-span-3 flex justify-between">
       <h1 class="text-2xl">
         {#if currentAccount}

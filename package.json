@@ -24,6 +24,7 @@
   },
   "dependencies": {
     "jwt-decode": "^3.1.2",
+    "pdf-thumbnails-generator": "^1.0.6",
     "sirv-cli": "^1.0.0",
     "svelte-forms-lib": "^1.10.6",
     "svelte-preprocess": "^4.9.4",
