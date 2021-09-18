@@ -3,13 +3,17 @@
 
     export let mediaThumbnailsList;
     export let mediaFilesList;
+    export let deletedMediaIds;
     const dispatch = createEventDispatcher();
 
     function convertMedia(file) {
         dispatch("convertMedia", file);
     }
 
-    function deleteFile(media_file_index) {
+    function deleteFile(media_file_index, media_file_id) {
+        if(media_file_id){
+            deletedMediaIds = [...deletedMediaIds, media_file_id]
+        }
         URL.revokeObjectURL(mediaThumbnailsList[media_file_index]);
         mediaThumbnailsList.splice(media_file_index, 1);
         mediaThumbnailsList = mediaThumbnailsList;
@@ -33,6 +37,7 @@
             }
         }
     }
+    
 </script>
 
 <div
@@ -49,16 +54,16 @@
             'justify-center'} flex overflow-x-auto flex-nowrap mt-5"
     >
         {#if mediaThumbnailsList.length > 0}
-            {#each mediaThumbnailsList as imageURL, i}
+            {#each mediaThumbnailsList as media, i}
                 <div class="flex justify-end">
                     <img
                         class="h-32 rounded mx-2"
-                        src={imageURL}
+                        src={media.url}
                         alt="Thumbnail of document"
                     />
                     <div
                         on:click={() => {
-                            deleteFile(i);
+                            deleteFile(i, media.id);
                         }}
                         class="absolute pr-3 pt-2"
                     >
