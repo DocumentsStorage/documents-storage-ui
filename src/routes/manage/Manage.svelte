@@ -1,6 +1,6 @@
 <script>
-    import AccountsList from "./manage-accounts/AccountsList.svelte";
-    import AccountForm from "./manage-accounts/AccountForm.svelte";
+    import AccountsList from './manage-accounts/AccountsList.svelte';
+    import AccountForm from './manage-accounts/AccountForm.svelte';
     export let currentAccount = null;
     export let allAccounts = [];
 

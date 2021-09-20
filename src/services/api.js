@@ -1,5 +1,5 @@
 import Cookies from 'universal-cookie';
-import notificationStore from '../components/NotificationStore.js'
+import notificationStore from '../components/NotificationStore.js';
 
 export const API_ENDPOINT = API_URL;
 
@@ -27,7 +27,7 @@ const parseData = async (response, headers, debug = false) => {
   }
   const responseBlob = response.clone();
   const contentType = await headers.get('Content-Type');
-  if (contentType){
+  if (contentType) {
     if (contentType.includes('json')) {
       const rawData = await response.json();
       return (rawData);
@@ -61,7 +61,7 @@ const fetchMethod = async (url, initialFetchConfig, timeout = 5000, debug = fals
       status: response.status,
       statusText: response.statusText,
       headers: response.headers,
-      data: await parseData(response, response.headers, debug),
+      data: await parseData(response, response.headers, debug)
     };
 
     clearTimeout(abortTimeout);
@@ -87,7 +87,7 @@ const fetchMethod = async (url, initialFetchConfig, timeout = 5000, debug = fals
     // Headers settings
     const url = API_ENDPOINT + requestConfig.endpoint;
   
-    let allHeaders = {
+    const allHeaders = {
       ...requestConfig.headers,
       Authorization: await getBearerToken()
     };
@@ -96,8 +96,8 @@ const fetchMethod = async (url, initialFetchConfig, timeout = 5000, debug = fals
     fetchConfig.headers = allHeaders;
     fetchConfig.method = requestConfig.method;
   
-    if(allHeaders['Content-Type'] === 'application/json'){
-      const stringifiedJSON = JSON.stringify(requestConfig.data)
+    if (allHeaders['Content-Type'] === 'application/json') {
+      const stringifiedJSON = JSON.stringify(requestConfig.data);
       fetchConfig.body = stringifiedJSON;
     } else {
       fetchConfig.body = requestConfig.data;
@@ -105,11 +105,11 @@ const fetchMethod = async (url, initialFetchConfig, timeout = 5000, debug = fals
   
     try {
       const responseObject = await fetchMethod(url, fetchConfig, requestConfig.timeout, requestConfig.debug);
-      if(responseObject.status === 503){
+      if (responseObject.status === 503) {
         notificationStore.set({
-          message: "Could not connect to remote server, try again",
-          type: "ERROR",
-        })
+          message: 'Could not connect to remote server, try again',
+          type: 'ERROR'
+        });
       }
       return responseObject;
     } catch (error) {

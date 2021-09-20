@@ -1,54 +1,53 @@
 <script>
-  import { createForm } from "svelte-forms-lib";
-  import * as yup from "yup";
-  import { navigate } from "svelte-routing";
-  import Cookies from "universal-cookie";
-  import { SendHTTPrequest } from "../services/api";
-  import { sessionInfo } from "../services/route-guard";
-  import notificationStore from "../components/NotificationStore.js";
-  import jwt_decode from "jwt-decode";
+  import { createForm } from 'svelte-forms-lib';
+  import * as yup from 'yup';
+  import { navigate } from 'svelte-routing';
+  import Cookies from 'universal-cookie';
+  import { SendHTTPrequest } from '../services/api';
+  import { sessionInfo } from '../services/route-guard';
+  import notificationStore from '../components/NotificationStore.js';
+  import jwt_decode from 'jwt-decode';
 
   const {
     form,
     errors,
-    state,
     handleChange,
-    handleSubmit: handleLogin,
+    handleSubmit: handleLogin
   } = createForm({
     initialValues: {
-      username: "",
-      password: "",
+      username: '',
+      password: ''
     },
     validationSchema: yup.object().shape({
       username: yup.string().required(),
-      password: yup.string().required(),
+      password: yup.string().required()
     }),
     onSubmit: async (values) => {
       const response = await SendHTTPrequest({
-        endpoint: "/token",
-        method: "POST",
+        endpoint: '/token',
+        method: 'POST',
         headers: {
-          "Content-Type": "application/x-www-form-urlencoded",
+          'Content-Type': 'application/x-www-form-urlencoded'
         },
-        data: `username=${values.username}&password=${values.password}`,
+        data: `username=${values.username}&password=${values.password}`
       });
       if (response.status === 200) {
         const cookies = new Cookies();
-        cookies.set("authToken", response.data.access_token, {
-          sameSite: "strict",
+        cookies.set('authToken', response.data.access_token, {
+          sameSite: 'strict'
         });
-        const currentSessionInfo = jwt_decode(response.data.access_token)
-        if (currentSessionInfo){
+        const currentSessionInfo = jwt_decode(response.data.access_token);
+        if (currentSessionInfo) {
           sessionInfo.set({isLogged: true, ...currentSessionInfo});
         }
-        navigate("/documents", { replace: true });
+        navigate('/documents', { replace: true });
       } else if (response.status > 400 && response.status < 500) {
         notificationStore.set({
-          message: "Could not login, check Your credentials",
-          type: "ERROR",
+          message: 'Could not login, check Your credentials',
+          type: 'ERROR'
         });
       }
-    },
+    }
   });
 </script>
 

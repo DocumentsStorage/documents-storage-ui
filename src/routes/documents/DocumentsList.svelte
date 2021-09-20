@@ -1,47 +1,47 @@
 <script>
-    import ActionsModal from "../../components/ActionsModal.svelte";
-    import notificationStore from "../../components/NotificationStore.js";
-    import { SendHTTPrequest } from "../../services/api";
-    import { onMount } from "svelte";
+    import ActionsModal from '../../components/ActionsModal.svelte';
+    import notificationStore from '../../components/NotificationStore.js';
+    import { SendHTTPrequest } from '../../services/api';
+    import { onMount } from 'svelte';
 
     export let allDocuments;
     export let currentDocument;
     export let modalConfig = {
         show: false,
-        title: "",
-        message: "",
-        cancelAction: "",
-        proceedAction: "",
-        callback: null,
+        title: '',
+        message: '',
+        cancelAction: '',
+        proceedAction: '',
+        callback: null
     };
 
     onMount(async () => {
         const response = await SendHTTPrequest({
-            endpoint: "/documents",
-            method: "GET",
+            endpoint: '/documents',
+            method: 'GET',
             headers: {
-                "Content-Type": "application/json",
-            },
+                'Content-Type': 'application/json'
+            }
         });
-        allDocuments = response.data.map((document)=> {
-            document.media_files = document.media_files?.map((uuid) => uuid["$uuid"]);
-            return document
-        })
+        allDocuments = response.data.map((document) => {
+            document.media_files = document.media_files?.map((uuid) => uuid['$uuid']);
+            return document;
+        });
     });
 
     async function deleteDocument() {
         modalConfig.show = false;
         const response = await SendHTTPrequest({
             endpoint: `/documents/${currentDocument._id.$oid}`,
-            method: "DELETE",
+            method: 'DELETE',
             headers: {
-                "Content-Type": "application/json",
-            },
+                'Content-Type': 'application/json'
+            }
         });
         if (response.status === 200) {
             notificationStore.set({
-                message: `Document type has been deleted`,
-                type: "SUCCESS",
+                message: 'Document type has been deleted',
+                type: 'SUCCESS'
             });
             allDocuments = allDocuments.filter(
                 (documentType) =>
@@ -49,8 +49,8 @@
             );
         } else if (response.status === 404) {
             notificationStore.set({
-                message: `Not found document`,
-                type: "ERROR",
+                message: 'Not found document',
+                type: 'ERROR'
             });
         }
     }
@@ -60,10 +60,10 @@
             show: true,
             title: `Delete ${currentDocument.title} document`,
             message:
-                "This action is irreversible. Document will be deleted with all uploaded media files.",
-            cancelAction: "Cancel",
-            proceedAction: "Delete",
-            callback: deleteDocument,
+                'This action is irreversible. Document will be deleted with all uploaded media files.',
+            cancelAction: 'Cancel',
+            proceedAction: 'Delete',
+            callback: deleteDocument
         };
     }
 </script>
@@ -78,7 +78,7 @@
                         <p>{documentType.title}</p>
                         <small
                             >{documentType.description.length > 15
-                                ? documentType.description.slice(0, 15) + "..."
+                                ? documentType.description.slice(0, 15) + '...'
                                 : documentType.description}</small
                         >
                     </div>

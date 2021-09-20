@@ -1,17 +1,17 @@
 <script>
-    import { createForm } from "svelte-forms-lib";
-    import * as yup from "yup";
-    import { SendHTTPrequest } from "../../services/api";
-    import notificationStore from "../../components/NotificationStore.js";
-    import Button from "../../common/Button.svelte";
-    import Input from "../../common/Input.svelte";
-    import MediaFilesBox from "./MediaFilesBox.svelte";
-    import generatePdfThumbnails from "pdf-thumbnails-generator";
-    import { onMount } from "svelte";
+    import { createForm } from 'svelte-forms-lib';
+    import * as yup from 'yup';
+    import { SendHTTPrequest } from '../../services/api';
+    import notificationStore from '../../components/NotificationStore.js';
+    import Button from '../../common/Button.svelte';
+    import Input from '../../common/Input.svelte';
+    import MediaFilesBox from './MediaFilesBox.svelte';
+    import generatePdfThumbnails from 'pdf-thumbnails-generator';
+    import { onMount } from 'svelte';
 
     export let allDocuments;
     export let documentTypesList = [];
-    export let currentDocumentType = "";
+    export let currentDocumentType = '';
     export let currentDocument = null;
     export let mediaThumbnailsList = [];
     export let mediaFilesList = [];
@@ -22,15 +22,13 @@
     function parseFieldTypeToHTMLType(value) {
         const type = typeof value;
         switch (type) {
-            case "string":
-                return "text";
+            case 'string':
+                return 'text';
             // Currently only object saved in db is date object
-            case "object":
-                return "date";
-                break;
-            case "number":
-                return "number";
-                break;
+            case 'object':
+                return 'date';
+            case 'number':
+                return 'number';
         }
     }
 
@@ -40,18 +38,18 @@
 
     function resetForm() {
         $form.title = null;
-        $form.description = "";
+        $form.description = '';
         $form.fields = [
             {
-                name: "",
-                value: "",
-                valueType: "text",
-            },
+                name: '',
+                value: '',
+                valueType: 'text'
+            }
         ];
         for (const mediaBlob of mediaThumbnailsList) {
             URL.revokeObjectURL(mediaBlob);
         }
-        currentDocumentType = "";
+        currentDocumentType = '';
         mediaFilesList = [];
         mediaThumbnailsList = [];
     }
@@ -60,8 +58,8 @@
 
     onMount(async () => {
         const result = await SendHTTPrequest({
-            endpoint: "/document_types",
-            method: "GET",
+            endpoint: '/document_types',
+            method: 'GET'
         });
         documentTypesList = result.data;
     });
@@ -71,11 +69,12 @@
             const thumbnails = await generatePdfThumbnails(blob, 120);
             return thumbnails[0];
         } catch (err) {
+            console.log(err)
         }
     }
 
     async function createThumbnail(blob, id) {
-        if (blob.type === "application/pdf") {
+        if (blob.type === 'application/pdf') {
             const temp_url = URL.createObjectURL(blob);
             const thumbnail = await createThumbnailPDF(temp_url);
             const base64Response = await fetch(thumbnail.thumbnail);
@@ -88,7 +87,7 @@
     async function mediaConverter(event) {
         let file;
         event.detail ? (file = event.detail) : (file = event);
-        var blob = new Blob([file], { type: file.type });
+        const blob = new Blob([file], { type: file.type });
         mediaFilesList = [...mediaFilesList, { file }];
         await createThumbnail(blob);
     }
@@ -98,7 +97,7 @@
             await media_files.map(async (media_id) => {
                 const result = await SendHTTPrequest({
                     endpoint: `/media/${media_id}`,
-                    method: "GET",
+                    method: 'GET'
                 });
                 return { file: result.data, id: media_id };
             })
@@ -114,7 +113,7 @@
                 const response = await fetch(media.file);
                 const data = await response.blob();
                 const blob = new Blob([data], {
-                    type: response.headers.get("content-type"),
+                    type: response.headers.get('content-type')
                 });
                 createThumbnail(blob, media.id);
             }
@@ -129,15 +128,15 @@
                 ) {
                     const element = currentDocument.fields[index];
                     const valueType = parseFieldTypeToHTMLType(element.value);
-                    if (typeof element.value === "object") {
-                        element.value = new Date(element.value["$date"])
+                    if (typeof element.value === 'object') {
+                        element.value = new Date(element.value['$date'])
                             .toISOString()
-                            .split("T")[0];
+                            .split('T')[0];
                     }
                     $form.fields.push({
                         name: element.name,
                         value: element.value,
-                        valueType: valueType,
+                        valueType
                     });
                 }
             }
@@ -146,18 +145,18 @@
 
     async function uploadFilesAPI() {
         if (mediaFilesList.length > 0) {
-            var data = new FormData();
-            for (var i = 0; i < mediaFilesList.length; i++) {
+            const data = new FormData();
+            for (let i = 0; i < mediaFilesList.length; i++) {
                 if (!mediaFilesList[i].id) {
-                    var file = mediaFilesList[i].file;
-                    data.append("media_files", file, file.name);
+                    const file = mediaFilesList[i].file;
+                    data.append('media_files', file, file.name);
                 }
             }
-            if (data.getAll("media_files").length > 0) {
+            if (data.getAll('media_files').length > 0) {
                 const response = await SendHTTPrequest({
-                    endpoint: "/media",
-                    method: "POST",
-                    data: data,
+                    endpoint: '/media',
+                    method: 'POST',
+                    data
                 });
                 if (response.status === 201) {
                     return response.data.ids;
@@ -171,23 +170,23 @@
 
     async function deleteFilesAPI() {
         if (deletedMediaIds.length > 0) {
-            let query = "/media?"
+            let query = '/media?';
             for (let index = 0; index < deletedMediaIds.length; index++) {
                 const id = deletedMediaIds[index];
-                if (index != 0){
-                    query += "&"
+                if (index != 0) {
+                    query += '&';
                 }
-                query += "media_files_ids="+id
+                query += 'media_files_ids=' + id;
             }
             const response = await SendHTTPrequest({
                 endpoint: query,
-                method: "DELETE",
+                method: 'DELETE',
                 headers: {
-                    "Content-Type": "application/json",
+                    'Content-Type': 'application/json'
                 },
-                data: deletedMediaIds,
+                data: deletedMediaIds
             });
-            console.log(response)
+            console.log(response);
             if (response.status === 200) {
                 return true;
             } else {
@@ -202,10 +201,10 @@
         let data = { ...documentData };
 
         // Delete files
-        const result = await deleteFilesAPI();
+        await deleteFilesAPI();
 
         // Add new files
-        let newMediaFilesIDs = await uploadFilesAPI();
+        const newMediaFilesIDs = await uploadFilesAPI();
 
         // Remove deleted files
         const oldMediaFiles = mediaFilesList.filter((media_file) => !deletedMediaIds.includes(media_file.id));
@@ -215,40 +214,40 @@
             oldMediaFilesIDs = [...oldMediaFilesIDs, ...newMediaFilesIDs];
         }
         
-        data = { ...data, media_files: oldMediaFilesIDs.filter((id)=> id !== undefined)};
+        data = { ...data, media_files: oldMediaFilesIDs.filter((id) => id !== undefined)};
 
         const response = await SendHTTPrequest({
             endpoint: `/documents/${data.id}`,
-            method: "PUT",
+            method: 'PUT',
             headers: {
-                "Content-Type": "application/json",
+                'Content-Type': 'application/json'
             },
-            data: data,
+            data
         });
         if (response.status === 200) {
             notificationStore.set({
-                message: "Updated successfully.",
-                type: "SUCCESS",
+                message: 'Updated successfully.',
+                type: 'SUCCESS'
             });
             documentData.fields = documentData.fields.map((field) => {
                 const valueType = parseFieldTypeToHTMLType(field.value);
-                if (typeof field.value === "object") {
-                    field.value = new Date(element.value["$date"])
+                if (typeof field.value === 'object') {
+                    field.value = new Date(element.value['$date'])
                         .toISOString()
-                        .split("T")[0];
+                        .split('T')[0];
                 }
                 field.valueType = valueType;
                 return field;
             });
             allDocuments.push({
                 _id: { $oid: response.data.id.$oid },
-                ...documentData,
+                ...documentData
             });
             allDocuments = allDocuments;
         } else if (response.status > 400 && response.status < 500) {
             notificationStore.set({
-                message: "Could not update document.",
-                type: "ERROR",
+                message: 'Could not update document.',
+                type: 'ERROR'
             });
         }
     }
@@ -260,24 +259,24 @@
             data = { ...data, media_files: mediaFilesIDs };
         }
         const response = await SendHTTPrequest({
-            endpoint: "/documents",
-            method: "POST",
+            endpoint: '/documents',
+            method: 'POST',
             headers: {
-                "Content-Type": "application/json",
+                'Content-Type': 'application/json'
             },
-            data,
+            data
         });
-        if (response.status === 200) {
+        if (response.status === 201) {
             notificationStore.set({
-                message: "Added successfully.",
-                type: "SUCCESS",
+                message: 'Added successfully.',
+                type: 'SUCCESS'
             });
             documentData.fields = documentData.fields.map((field) => {
                 const valueType = parseFieldTypeToHTMLType(field.value);
-                if (typeof field.value === "object") {
-                    field.value = new Date(element.value["$date"])
+                if (typeof field.value === 'object') {
+                    field.value = new Date(element.value['$date'])
                         .toISOString()
-                        .split("T")[0];
+                        .split('T')[0];
                 }
                 field.valueType = valueType;
                 return field;
@@ -285,25 +284,25 @@
             allDocuments.push({
                 _id: { $oid: response.data.id.$oid },
                 ...documentData,
-                media_files: mediaFilesIDs,
+                media_files: mediaFilesIDs
             });
             allDocuments = allDocuments;
         } else if (response.status > 400 && response.status < 500) {
             notificationStore.set({
-                message: "Could not add document.",
-                type: "ERROR",
+                message: 'Could not add document.',
+                type: 'ERROR'
             });
         }
     }
 
     function changeDocumentType(event) {
-        if (event.target.value === "none") {
+        if (event.target.value === 'none') {
             $form.fields = [
                 {
-                    name: "",
-                    value: "",
-                    valueType: "text",
-                },
+                    name: '',
+                    value: '',
+                    valueType: 'text'
+                }
             ];
         } else {
             const documentType = documentTypesList.find(
@@ -312,8 +311,8 @@
             const fields = documentType.fields.map((field) => {
                 return {
                     name: field.name,
-                    value: "",
-                    valueType: field.value_type,
+                    value: '',
+                    valueType: field.value_type
                 };
             });
             $form.fields = fields;
@@ -323,34 +322,33 @@
     const {
         form,
         errors,
-        state,
         handleChange,
-        handleSubmit: handleDocumentSubmit,
+        handleSubmit: handleDocumentSubmit
     } = createForm({
         initialValues: {
-            title: "",
-            description: "",
+            title: '',
+            description: '',
             fields: [
                 {
-                    name: "",
-                    value: "",
-                    valueType: "text",
-                },
-            ],
+                    name: '',
+                    value: '',
+                    valueType: 'text'
+                }
+            ]
         },
         validationSchema: yup.object().shape({
-            title: yup.string().min(1).required("Title field is required"),
+            title: yup.string().min(1).required('Title field is required'),
             description: yup.string().nullable(),
             fields: yup.array().of(
                 yup.object().shape({
-                    name: yup.string().required("Name of field is required"),
-                    value: yup.string().required("Value for field is required"),
+                    name: yup.string().required('Name of field is required'),
+                    value: yup.string().required('Value for field is required')
                 })
-            ),
+            )
         }),
         onSubmit: async (values) => {
             values.fields = values.fields.map((field) => {
-                if (field.valueType === "date") {
+                if (field.valueType === 'date') {
                     const date = new Date(field.value);
                     field.value = date.toISOString();
                 }
@@ -361,15 +359,15 @@
             } else {
                 await updateDocumentAPI({
                     id: currentDocument._id.$oid,
-                    ...values,
+                    ...values
                 });
             }
-        },
+        }
     });
 
     export const addField = () => {
-        $form.fields = $form.fields.concat({ name: "", value: "" });
-        $errors.fields = $errors.fields.concat({ name: "", value: "" });
+        $form.fields = $form.fields.concat({ name: '', value: '' });
+        $errors.fields = $errors.fields.concat({ name: '', value: '' });
     };
 
     export const removeField = (i) => () => {
@@ -478,7 +476,7 @@
                     name={`fields[${j}].value`}
                     value={field.value}
                     type={field.valueType}
-                    placeholder={field.name + " value"}
+                    placeholder={field.name + ' value'}
                     on:change={handleChange}
                     on:blur={handleChange}
                     on:changeValue={InputChangeValue}
@@ -502,6 +500,6 @@
     <input
         type="submit"
         class="dark:bg-gray-800 dark:active:bg-gray-900 dark:text-white rounded-lg shadow-md py-2 px-5 col-start-3"
-        value={currentDocument ? "Update" : "Add"}
+        value={currentDocument ? 'Update' : 'Add'}
     />
 </form>

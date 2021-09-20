@@ -1,51 +1,50 @@
 <script>
-  import { createForm } from "svelte-forms-lib";
-  import * as yup from "yup";
-  import jwt_decode from "jwt-decode";
-  import Cookies from "universal-cookie";
-  import { SendHTTPrequest } from "../../services/api";
-  import notificationStore from "../../components/NotificationStore.js";
+  import { createForm } from 'svelte-forms-lib';
+  import * as yup from 'yup';
+  import jwt_decode from 'jwt-decode';
+  import Cookies from 'universal-cookie';
+  import { SendHTTPrequest } from '../../services/api';
+  import notificationStore from '../../components/NotificationStore.js';
 
   const {
     form,
     errors,
-    state,
     handleChange,
-    handleSubmit: handleUpdateAccount,
+    handleSubmit: handleUpdateAccount
   } = createForm({
     initialValues: {
-      password: "",
-      new_password: "",
+      password: '',
+      new_password: ''
     },
     validationSchema: yup.object().shape({
       password: yup.string().required(),
-      new_password: yup.string().min(3).required(),
+      new_password: yup.string().min(3).required()
     }),
     onSubmit: async (values) => {
       const cookies = new Cookies();
       const response = await SendHTTPrequest({
-        endpoint: `/accounts/${jwt_decode(cookies.get("authToken")).client_id}`,
-        method: "PATCH",
+        endpoint: `/accounts/${jwt_decode(cookies.get('authToken')).client_id}`,
+        method: 'PATCH',
         headers: {
-          "Content-Type": "application/json",
+          'Content-Type': 'application/json'
         },
         data: {
           password: values.password,
-          new_password: values.new_password,
-        },
+          new_password: values.new_password
+        }
       });
       if (response.status === 200) {
         notificationStore.set({
-          message: "Updated successfully",
-          type: "SUCCESS",
+          message: 'Updated successfully',
+          type: 'SUCCESS'
         });
       } else if (response.status > 400 && response.status < 500) {
         notificationStore.set({
-          message: "Could not change account data",
-          type: "ERROR",
+          message: 'Could not change account data',
+          type: 'ERROR'
         });
       }
-    },
+    }
   });
 </script>
 

@@ -1,6 +1,6 @@
 <script>
-    import DocumentTypesEditor from "./DocumentTypesEditor.svelte";
-    import DocumentTypesList from "./DocumentTypesList.svelte";
+    import DocumentTypesEditor from './DocumentTypesEditor.svelte';
+    import DocumentTypesList from './DocumentTypesList.svelte';
 
     export let currentDocumentType = null;
     export let allDocumentTypes = [];

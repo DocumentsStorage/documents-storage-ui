@@ -1,21 +1,18 @@
 <script>
-  import { createForm } from "svelte-forms-lib";
-  import * as yup from "yup";
-  import { SendHTTPrequest } from "../../services/api";
-  import notificationStore from "../../components/NotificationStore.js";
-  import Button from "../../common/Button.svelte";
+  import { createForm } from 'svelte-forms-lib';
+  import * as yup from 'yup';
+  import { SendHTTPrequest } from '../../services/api';
+  import notificationStore from '../../components/NotificationStore.js';
+  import Button from '../../common/Button.svelte';
 
   export let allDocumentTypes;
   export let currentDocumentType = null;
 
   function resetForm() {
-    $form.title = null;
-    $form.description= null;
-    $form.fields  = [{
-      "name": "",
-      "value_type": ""
-    }];
     currentDocumentType = null;
+    $form.title = null;
+    $form.fields = [{name: '', value_type: '' }];
+    $form.description = null;
   }
 
   $: currentDocumentType, loadDocumentType();
@@ -29,7 +26,7 @@
         const element = currentDocumentType.fields[index];
         $form.fields.push({
           name: element.name,
-          value_type: element.value_type,
+          value_type: element.value_type
         });
       }
     }
@@ -38,53 +35,53 @@
   async function updateDocumentType(documentTypeData) {
     const response = await SendHTTPrequest({
       endpoint: `/document_types/${currentDocumentType._id.$oid}`,
-      method: "PUT",
+      method: 'PUT',
       headers: {
-        "Content-Type": "application/json",
+        'Content-Type': 'application/json'
       },
-      data: documentTypeData,
+      data: documentTypeData
     });
     if (response.status === 200) {
       notificationStore.set({
-        message: "Updated successfully.",
-        type: "SUCCESS",
+        message: 'Updated successfully.',
+        type: 'SUCCESS'
       });
       allDocumentTypes.push({
         _id: { $oid: response.data.id.$oid },
-        ...documentTypeData,
+        ...documentTypeData
       });
       allDocumentTypes = allDocumentTypes;
     } else if (response.status > 400 && response.status < 500) {
       notificationStore.set({
-        message: "Could not update document type.",
-        type: "ERROR",
+        message: 'Could not update document type.',
+        type: 'ERROR'
       });
     }
   }
 
   async function createDocumentType(documentTypeData) {
     const response = await SendHTTPrequest({
-      endpoint: "/document_types",
-      method: "POST",
+      endpoint: '/document_types',
+      method: 'POST',
       headers: {
-        "Content-Type": "application/json",
+        'Content-Type': 'application/json'
       },
-      data: documentTypeData,
+      data: documentTypeData
     });
     if (response.status === 201) {
       notificationStore.set({
-        message: "Added successfully.",
-        type: "SUCCESS",
+        message: 'Added successfully.',
+        type: 'SUCCESS'
       });
       allDocumentTypes.push({
         _id: { $oid: response.data.id.$oid },
-        ...documentTypeData,
+        ...documentTypeData
       });
       allDocumentTypes = allDocumentTypes;
     } else if (response.status > 400 && response.status < 500) {
       notificationStore.set({
-        message: "Could not add document type.",
-        type: "ERROR",
+        message: 'Could not add document type.',
+        type: 'ERROR'
       });
     }
   }
@@ -92,42 +89,41 @@
   const {
     form,
     errors,
-    state,
     handleChange,
-    handleSubmit: handleDocumentTypeSubmit,
+    handleSubmit: handleDocumentTypeSubmit
   } = createForm({
     initialValues: {
-      title: "",
-      description: "",
+      title: '',
+      description: '',
       fields: [
         {
-          name: "",
-          value_type: "",
-        },
-      ],
+          name: '',
+          value_type: ''
+        }
+      ]
     },
     validationSchema: yup.object().shape({
-      title: yup.string().min(1).required("Title field is required"),
+      title: yup.string().min(1).required('Title field is required'),
       description: yup.string(),
       fields: yup.array().of(
         yup.object().shape({
-          name: yup.string().required("Name of field is required"),
-          value_type: yup.string().required("Value type for field is required"),
+          name: yup.string().required('Name of field is required'),
+          value_type: yup.string().required('Value type for field is required')
         })
-      ),
+      )
     }),
     onSubmit: async (values) => {
-      if(!currentDocumentType){
+      if (!currentDocumentType) {
         await createDocumentType(values);
       } else {
-        await updateDocumentType({id: currentDocumentType._id.$oid, ...values,})
+        await updateDocumentType({id: currentDocumentType._id.$oid, ...values});
       }
-    },
+    }
   });
 
   export const add = () => {
-    $form.fields = $form.fields.concat({ name: "", value_type: "" });
-    $errors.fields = $errors.fields.concat({ name: "", value_type: "" });
+    $form.fields = $form.fields.concat({ name: '', value_type: '' });
+    $errors.fields = $errors.fields.concat({ name: '', value_type: '' });
   };
 
   export const remove = (i) => () => {
@@ -236,6 +232,6 @@
   <input
     type="submit"
     class="dark:bg-gray-800 dark:active:bg-gray-900 dark:text-white rounded-lg shadow-md py-2 px-5 col-start-3"
-    value={currentDocumentType ? "Update" : "Add"}
+    value={currentDocumentType ? 'Update' : 'Add'}
   />
 </form>

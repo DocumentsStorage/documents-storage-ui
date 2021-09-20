@@ -1,9 +1,9 @@
 <script>
-	import { Link } from "svelte-routing";
-	import Button from "../../common/Button.svelte";
+	import { Link } from 'svelte-routing';
+	import Button from '../../common/Button.svelte';
 
-    import DocumentsEditor from "./DocumentsEditor.svelte";
-    import DocumentsList from "./DocumentsList.svelte";
+    import DocumentsEditor from './DocumentsEditor.svelte';
+    import DocumentsList from './DocumentsList.svelte';
 
     export let currentDocument = null;
     export let allDocuments = [];

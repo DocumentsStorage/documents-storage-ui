@@ -1,9 +1,9 @@
 <script>
-    import notificationStore from "./NotificationStore";
+    import notificationStore from './NotificationStore';
 
     export let showNotification = false;
-    export let notificationMessage = "";
-    export let notificationType = "SUCCESS";
+    export let notificationMessage = '';
+    export let notificationType = 'SUCCESS';
 
     function showNotificationCall(message, type) {
         if (message.length > 0) {

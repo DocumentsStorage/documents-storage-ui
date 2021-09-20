@@ -1,18 +1,18 @@
 <script>
-    import { SendHTTPrequest } from "../../../services/api";
-    import notificationStore from "../../../components/NotificationStore.js";
-    import ActionsModal from "../../../components/ActionsModal.svelte";
-    import { onMount } from "svelte";
+    import { SendHTTPrequest } from '../../../services/api';
+    import notificationStore from '../../../components/NotificationStore.js';
+    import ActionsModal from '../../../components/ActionsModal.svelte';
+    import { onMount } from 'svelte';
 
     export let allAccounts = [];
     export let currentAccount = null;
     export let modalConfig = {
         show: false,
-        title: "",
-        message: "",
-        cancelAction: "",
-        proceedAction: "",
-        callback: null,
+        title: '',
+        message: '',
+        cancelAction: '',
+        proceedAction: '',
+        callback: null
     };
 
     async function resetPassword() {
@@ -20,24 +20,24 @@
         modalConfig.show = false;
         const response = await SendHTTPrequest({
             endpoint: `/accounts/${currentAccount._id.$oid}`,
-            method: "PATCH",
+            method: 'PATCH',
             headers: {
-                "Content-Type": "application/json",
+                'Content-Type': 'application/json'
             },
             data: {
                 id: currentAccount._id.$oid,
-                new_password: temporaryPassword,
-            },
+                new_password: temporaryPassword
+            }
         });
         if (response.status === 200) {
             notificationStore.set({
                 message: `New account password is: ${temporaryPassword}`,
-                type: "SUCCESS",
+                type: 'SUCCESS'
             });
         } else if (response.status === 404) {
             notificationStore.set({
-                message: `Not found account`,
-                type: "ERROR",
+                message: 'Not found account',
+                type: 'ERROR'
             });
         }
     }
@@ -47,10 +47,10 @@
             show: true,
             title: `Reset password for ${currentAccount.username}`,
             message:
-                "This action will result in reseting password for account, new password will be prompted to you as notification for few seconds. Make sure user will change it!.",
-            cancelAction: "Cancel",
-            proceedAction: "Reset",
-            callback: resetPassword,
+                'This action will result in reseting password for account, new password will be prompted to you as notification for few seconds. Make sure user will change it!.',
+            cancelAction: 'Cancel',
+            proceedAction: 'Reset',
+            callback: resetPassword
         };
     }
 
@@ -58,21 +58,21 @@
         modalConfig.show = false;
         const response = await SendHTTPrequest({
             endpoint: `/accounts/${currentAccount._id.$oid}`,
-            method: "DELETE",
+            method: 'DELETE',
             headers: {
-                "Content-Type": "application/json",
-            },
+                'Content-Type': 'application/json'
+            }
         });
         if (response.status === 200) {
             notificationStore.set({
-                message: `Account has been deleted`,
-                type: "SUCCESS",
+                message: 'Account has been deleted',
+                type: 'SUCCESS'
             });
-            allAccounts = allAccounts.filter((account)=>account.username !== currentAccount.username)
+            allAccounts = allAccounts.filter((account) => account.username !== currentAccount.username);
         } else if (response.status === 404) {
             notificationStore.set({
-                message: `Not found account`,
-                type: "ERROR",
+                message: 'Not found account',
+                type: 'ERROR'
             });
         }
     }
@@ -82,17 +82,17 @@
             show: true,
             title: `Delete ${currentAccount.username} account`,
             message:
-                "This action is irreversible. Whole account will be deleted, only documents linked to this account will persist.",
-            cancelAction: "Cancel",
-            proceedAction: "Delete",
-            callback: deleteAccount,
+                'This action is irreversible. Whole account will be deleted, only documents linked to this account will persist.',
+            cancelAction: 'Cancel',
+            proceedAction: 'Delete',
+            callback: deleteAccount
         };
     }
 
     onMount(async () => {
         const response = await SendHTTPrequest({
-            endpoint: "/accounts/list?limit=20",
-            method: "GET",
+            endpoint: '/accounts/list?limit=20',
+            method: 'GET'
         });
         if (response.status === 200) {
             allAccounts = response.data;
