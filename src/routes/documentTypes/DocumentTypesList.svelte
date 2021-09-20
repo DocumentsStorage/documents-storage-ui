@@ -1,7 +1,7 @@
 <script>
-    import ActionsModal from '../../components/ActionsModal.svelte';
-    import notificationStore from '../../components/NotificationStore.js';
-    import { SendHTTPrequest } from '../../services/api';
+    import ActionsModal from 'components/ActionsModal.svelte';
+    import notificationStore from 'components/NotificationStore.js';
+    import { SendHTTPrequest } from 'services/api.js';
     import { onMount } from 'svelte';
   
     export let allDocumentTypes;

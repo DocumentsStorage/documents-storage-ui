@@ -1,6 +1,8 @@
 import Cookies from 'universal-cookie';
-import notificationStore from '../components/NotificationStore.js';
+import notificationStore from 'components/NotificationStore.js';
 
+
+// eslint-disable-next-line no-undef
 export const API_ENDPOINT = API_URL;
 
 const binaryContentTypesToBeSaved = [

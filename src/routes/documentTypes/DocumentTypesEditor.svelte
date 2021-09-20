@@ -1,9 +1,9 @@
 <script>
   import { createForm } from 'svelte-forms-lib';
   import * as yup from 'yup';
-  import { SendHTTPrequest } from '../../services/api';
-  import notificationStore from '../../components/NotificationStore.js';
-  import Button from '../../common/Button.svelte';
+  import { SendHTTPrequest } from 'services/api.js';
+  import notificationStore from 'components/NotificationStore.js';
+  import Button from 'common/Button.svelte';
 
   export let allDocumentTypes;
   export let currentDocumentType = null;

@@ -1,5 +1,5 @@
 <script>
-    import notificationStore from './NotificationStore';
+    import notificationStore from 'components/NotificationStore.js';
 
     export let showNotification = false;
     export let notificationMessage = '';

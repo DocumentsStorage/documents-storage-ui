@@ -2,9 +2,9 @@
 	import { Router, Link, Route, navigate } from 'svelte-routing';
 	import Cookies from 'universal-cookie';
 
-	import Notification from './components/Notification.svelte';
-	import Button from './common/Button.svelte';
-	import ModLink from './common/ModLink.svelte';
+	import Notification from 'components/Notification.svelte';
+	import Button from 'common/Button.svelte';
+	import ModLink from 'common/ModLink.svelte';
 
 	import Login from './routes/Login.svelte';
 	import Account from './routes/account/Account.svelte';
@@ -45,7 +45,8 @@
 				cookies.remove('authToken');
 			}
 		} catch (e) {
-			console.log(e);
+			return e;
+			// console.error(e);
 		}
 		checkRoute();
 	});

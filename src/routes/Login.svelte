@@ -3,9 +3,9 @@
   import * as yup from 'yup';
   import { navigate } from 'svelte-routing';
   import Cookies from 'universal-cookie';
-  import { SendHTTPrequest } from '../services/api';
-  import { sessionInfo } from '../services/route-guard';
-  import notificationStore from '../components/NotificationStore.js';
+  import { SendHTTPrequest } from 'services/api.js';
+  import { sessionInfo } from 'services/route-guard.js';
+  import notificationStore from 'components/NotificationStore.js';
   import jwt_decode from 'jwt-decode';
 
   const {

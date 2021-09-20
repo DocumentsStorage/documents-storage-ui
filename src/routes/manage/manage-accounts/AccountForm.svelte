@@ -1,8 +1,8 @@
 <script>
   import { createForm } from 'svelte-forms-lib';
   import * as yup from 'yup';
-  import { SendHTTPrequest } from '../../../services/api';
-  import notificationStore from '../../../components/NotificationStore.js';
+  import { SendHTTPrequest } from 'services/api.js';
+  import notificationStore from 'components/NotificationStore.js';
 
   export let allAccounts;
   export let currentAccount = null;

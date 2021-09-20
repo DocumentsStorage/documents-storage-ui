@@ -1,6 +1,6 @@
 <script>
 	import { Link } from 'svelte-routing';
-	import Button from '../../common/Button.svelte';
+	import Button from 'common/Button.svelte';
 
     import DocumentsEditor from './DocumentsEditor.svelte';
     import DocumentsList from './DocumentsList.svelte';

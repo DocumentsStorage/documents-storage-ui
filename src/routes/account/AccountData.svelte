@@ -3,9 +3,9 @@
   import * as yup from 'yup';
   import Cookies from 'universal-cookie';
   import jwt_decode from 'jwt-decode';
-  import { SendHTTPrequest } from '../../services/api';
+  import { SendHTTPrequest } from 'services/api.js';
   import { onMount } from 'svelte';
-  import notificationStore from '../../components/NotificationStore.js';
+  import notificationStore from 'components/NotificationStore.js';
 
   export let username = '';
 

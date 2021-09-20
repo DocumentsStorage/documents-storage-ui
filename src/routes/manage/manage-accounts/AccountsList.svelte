@@ -1,7 +1,7 @@
 <script>
-    import { SendHTTPrequest } from '../../../services/api';
-    import notificationStore from '../../../components/NotificationStore.js';
-    import ActionsModal from '../../../components/ActionsModal.svelte';
+    import { SendHTTPrequest } from 'services/api.js';
+    import notificationStore from 'components/NotificationStore.js';
+    import ActionsModal from 'components/ActionsModal.svelte';
     import { onMount } from 'svelte';
 
     export let allAccounts = [];

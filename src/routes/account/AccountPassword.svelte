@@ -3,8 +3,8 @@
   import * as yup from 'yup';
   import jwt_decode from 'jwt-decode';
   import Cookies from 'universal-cookie';
-  import { SendHTTPrequest } from '../../services/api';
-  import notificationStore from '../../components/NotificationStore.js';
+  import { SendHTTPrequest } from 'services/api.js';
+  import notificationStore from 'components/NotificationStore.js';
 
   const {
     form,

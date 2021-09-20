@@ -1,10 +1,10 @@
 <script>
     import { createForm } from 'svelte-forms-lib';
     import * as yup from 'yup';
-    import { SendHTTPrequest } from '../../services/api';
-    import notificationStore from '../../components/NotificationStore.js';
-    import Button from '../../common/Button.svelte';
-    import Input from '../../common/Input.svelte';
+    import { SendHTTPrequest } from 'services/api.js';
+    import notificationStore from 'components/NotificationStore.js';
+    import Button from 'common/Button.svelte';
+    import Input from 'common/Input.svelte';
     import MediaFilesBox from './MediaFilesBox.svelte';
     import generatePdfThumbnails from 'pdf-thumbnails-generator';
     import { onMount } from 'svelte';
@@ -69,7 +69,7 @@
             const thumbnails = await generatePdfThumbnails(blob, 120);
             return thumbnails[0];
         } catch (err) {
-            console.log(err)
+            console.log(err);
         }
     }
 
@@ -232,7 +232,7 @@
             documentData.fields = documentData.fields.map((field) => {
                 const valueType = parseFieldTypeToHTMLType(field.value);
                 if (typeof field.value === 'object') {
-                    field.value = new Date(element.value['$date'])
+                    field.value = new Date(field.value['$date'])
                         .toISOString()
                         .split('T')[0];
                 }
@@ -274,7 +274,7 @@
             documentData.fields = documentData.fields.map((field) => {
                 const valueType = parseFieldTypeToHTMLType(field.value);
                 if (typeof field.value === 'object') {
-                    field.value = new Date(element.value['$date'])
+                    field.value = new Date(field.value['$date'])
                         .toISOString()
                         .split('T')[0];
                 }
