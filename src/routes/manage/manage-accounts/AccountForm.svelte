@@ -9,7 +9,7 @@
 
   function resetForm() {
     $form.username = null;
-    $form.password = null;
+    $form.new_password = null;
     $form.rank = "user";
     currentAccount = null;
   }
@@ -26,14 +26,14 @@
 
   async function createAccount(accountData) {
     const response = await SendHTTPrequest({
-      endpoint: "/accounts/add",
+      endpoint: "/accounts",
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
       data: accountData,
     });
-    if (response.status === 200) {
+    if (response.status === 201) {
       notificationStore.set({
         message: "Added account",
         type: "SUCCESS",
@@ -53,8 +53,9 @@
   }
 
   async function updateAccount(accountData) {
+    accountData.new_password = accountData.new_password ?  accountData.new_password : delete accountData['new_password']
     const response = await SendHTTPrequest({
-      endpoint: "/accounts/update",
+      endpoint: `/accounts/${accountData.id}`,
       method: "PATCH",
       headers: {
         "Content-Type": "application/json",
@@ -93,12 +94,12 @@
   } = createForm({
     initialValues: {
       username: null,
-      password: null,
+      new_password: null,
       rank: "user",
     },
     validationSchema: yup.object().shape({
       username: yup.string().min(1).nullable(true),
-      password: yup.string().min(3).nullable(true),
+      new_password: yup.string().min(3).nullable(true),
       rank: yup.string().oneOf(["admin", "user"]).nullable(true),
     }),
     onSubmit: async (values) => {
@@ -150,21 +151,21 @@
 
     {#if !currentAccount}
       <div class="col-span-3">
-        <label class="my-2" for="password">Password</label>
+        <label class="my-2" for="new_password">Password</label>
         <input
-          id="password"
-          name="password"
+          id="new_password"
+          name="new_password"
           autocomplete="new-password"
           type="password"
           placeholder="Minimum 3 characters"
           class="w-full dark:bg-gray-900 px-2"
           on:change={handleChange}
-          bind:value={$form.password}
+          bind:value={$form.new_password}
         />
       </div>
       <small class="col-span-3 h-5">
-        {#if $errors.password}
-          {$errors.password}
+        {#if $errors.new_password}
+          {$errors.new_password}
         {/if}
       </small>
     {/if}

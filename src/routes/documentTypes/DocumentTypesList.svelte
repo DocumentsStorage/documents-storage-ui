@@ -29,7 +29,7 @@
     async function deleteDocumentType() {
         modalConfig.show = false;
         const response = await SendHTTPrequest({
-            endpoint: `/document_types?document_type_id=${currentDocumentType._id.$oid}`,
+            endpoint: `/document_types/${currentDocumentType._id.$oid}`,
             method: "DELETE",
             headers: {
                 "Content-Type": "application/json",
@@ -43,7 +43,7 @@
             allDocumentTypes = allDocumentTypes.filter((documentType)=>documentType._id.$oid !== currentDocumentType._id.$oid)
         } else if (response.status === 404) {
             notificationStore.set({
-                message: `Not found documen type`,
+                message: `Not found document type`,
                 type: "ERROR",
             });
         }

@@ -19,7 +19,7 @@
         const temporaryPassword = Math.floor(Math.random() * 9000 + 999);
         modalConfig.show = false;
         const response = await SendHTTPrequest({
-            endpoint: "/accounts/update",
+            endpoint: `/accounts/${currentAccount._id.$oid}`,
             method: "PATCH",
             headers: {
                 "Content-Type": "application/json",
@@ -57,7 +57,7 @@
     async function deleteAccount() {
         modalConfig.show = false;
         const response = await SendHTTPrequest({
-            endpoint: `/accounts/delete?account_id=${currentAccount._id.$oid}`,
+            endpoint: `/accounts/${currentAccount._id.$oid}`,
             method: "DELETE",
             headers: {
                 "Content-Type": "application/json",

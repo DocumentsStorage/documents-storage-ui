@@ -24,13 +24,12 @@
     onSubmit: async (values) => {
       const cookies = new Cookies();
       const response = await SendHTTPrequest({
-        endpoint: "/accounts/update",
+        endpoint: `/accounts/${jwt_decode(cookies.get("authToken")).client_id}`,
         method: "PATCH",
         headers: {
           "Content-Type": "application/json",
         },
         data: {
-          id: jwt_decode(cookies.get("authToken")).client_id,
           password: values.password,
           new_password: values.new_password,
         },

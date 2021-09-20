@@ -159,7 +159,7 @@
                     method: "POST",
                     data: data,
                 });
-                if (response.status === 200) {
+                if (response.status === 201) {
                     return response.data.ids;
                 }
             } else {
@@ -171,14 +171,23 @@
 
     async function deleteFilesAPI() {
         if (deletedMediaIds.length > 0) {
+            let query = "/media?"
+            for (let index = 0; index < deletedMediaIds.length; index++) {
+                const id = deletedMediaIds[index];
+                if (index != 0){
+                    query += "&"
+                }
+                query += "media_files_ids="+id
+            }
             const response = await SendHTTPrequest({
-                endpoint: "/media",
+                endpoint: query,
                 method: "DELETE",
                 headers: {
                     "Content-Type": "application/json",
                 },
                 data: deletedMediaIds,
             });
+            console.log(response)
             if (response.status === 200) {
                 return true;
             } else {
@@ -199,19 +208,17 @@
         let newMediaFilesIDs = await uploadFilesAPI();
 
         // Remove deleted files
-        const oldMediaFiles = mediaFilesList.filter(
-            (media_file) => !deletedMediaIds.includes(media_file.id)
-        );
+        const oldMediaFiles = mediaFilesList.filter((media_file) => !deletedMediaIds.includes(media_file.id));
 
         let oldMediaFilesIDs = oldMediaFiles.map((file) => file.id);
-
         if (newMediaFilesIDs !== null) {
             oldMediaFilesIDs = [...oldMediaFilesIDs, ...newMediaFilesIDs];
         }
-
+        
         data = { ...data, media_files: oldMediaFilesIDs.filter((id)=> id !== undefined)};
+
         const response = await SendHTTPrequest({
-            endpoint: "/documents",
+            endpoint: `/documents/${data.id}`,
             method: "PUT",
             headers: {
                 "Content-Type": "application/json",
@@ -321,8 +328,8 @@
         handleSubmit: handleDocumentSubmit,
     } = createForm({
         initialValues: {
-            title: null,
-            description: " ",
+            title: "",
+            description: "",
             fields: [
                 {
                     name: "",

@@ -38,7 +38,6 @@
           sameSite: "strict",
         });
         const currentSessionInfo = jwt_decode(response.data.access_token)
-        console.log(currentSessionInfo)
         if (currentSessionInfo){
           sessionInfo.set({isLogged: true, ...currentSessionInfo});
         }

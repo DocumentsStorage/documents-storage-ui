@@ -37,7 +37,7 @@
 
   async function updateDocumentType(documentTypeData) {
     const response = await SendHTTPrequest({
-      endpoint: "/document_types",
+      endpoint: `/document_types/${currentDocumentType._id.$oid}`,
       method: "PUT",
       headers: {
         "Content-Type": "application/json",
@@ -71,7 +71,7 @@
       },
       data: documentTypeData,
     });
-    if (response.status === 200) {
+    if (response.status === 201) {
       notificationStore.set({
         message: "Added successfully.",
         type: "SUCCESS",
