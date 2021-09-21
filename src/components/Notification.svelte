@@ -27,7 +27,7 @@
         {notificationType === 'SUCCESS' && 'bg-green-500'} 
         {notificationType === 'WARNING' && 'bg-yellow-500'} 
         {notificationType === 'ERROR' && 'bg-red-500'} 
-        absolute py-2 px-6 rounded-full mt-5 mx-5
+        fixed py-2 px-6 rounded-full mt-5 mx-5
         "
     >
         <p>{notificationMessage}</p>

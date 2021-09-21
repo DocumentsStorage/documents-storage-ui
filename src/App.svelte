@@ -14,7 +14,7 @@
 
 	import jwt_decode from 'jwt-decode';
 
-	import { checkRoute, sessionInfo } from './services/route-guard';
+	import { checkRoute, sessionInfo } from 'services/route-guard.js';
 	import { onMount } from 'svelte';
 
 	export let url = '';

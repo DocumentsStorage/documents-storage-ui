@@ -72,12 +72,11 @@
                     <small>{documentType.description.length > 15 ? documentType.description.slice(0,15) + '...' : documentType.description}</small>
                 </div>
                 <!-- Inline -->
-                <div class="mx-5 flex">
+                <div class="w-full mr-5 flex justify-end">
                     <span
                         class="flex items-center pl-5 dark:text-white text-black hover:text-red-500"
                         on:click={() => {
                             currentDocumentType = documentType;
-                            // TODO:
                             startDeleteDocumentType();
                         }}
                         ><i class="ph-file-minus mx-2" />

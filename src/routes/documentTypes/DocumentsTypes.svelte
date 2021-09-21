@@ -6,10 +6,14 @@
     export let allDocumentTypes = [];
 </script>
 
-<div>
-    <h1 class="text-2xl">Document Types</h1>
-    <div class="grid grid-flow-row md:grid-flow-col gap-10">
-        <DocumentTypesList bind:currentDocumentType bind:allDocumentTypes />
-        <DocumentTypesEditor bind:currentDocumentType bind:allDocumentTypes />
+<div class="w-full mx-5 xl:mx-0 lg:w-1/2">
+    <h1 class="text-2xl mt-5">Document Types</h1>
+    <div class="grid sm:grid-cols-4 gap-10">
+        <div class="col-span-2">
+            <DocumentTypesList bind:currentDocumentType bind:allDocumentTypes />
+        </div>
+        <div class="col-span-2">
+            <DocumentTypesEditor bind:currentDocumentType bind:allDocumentTypes />
+        </div>
     </div>
 </div>

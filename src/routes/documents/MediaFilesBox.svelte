@@ -11,6 +11,7 @@
     }
 
     function deleteFile(media_file_index, media_file_id) {
+        console.log("Schedule deletion", media_file_id)
         if (media_file_id) {
             deletedMediaIds = [...deletedMediaIds, media_file_id];
         }
