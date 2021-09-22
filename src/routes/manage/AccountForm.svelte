@@ -1,25 +1,25 @@
 <script>
-  import { createForm } from "svelte-forms-lib";
-  import * as yup from "yup";
-  import { SendHTTPrequest } from "services/api.js";
-  import notificationStore from "components/NotificationStore.js";
-  import ActionsModal from "components/ActionsModal.svelte";
+  import { createForm } from 'svelte-forms-lib';
+  import * as yup from 'yup';
+  import { SendHTTPrequest } from 'services/api.js';
+  import notificationStore from 'components/NotificationStore.js';
+  import ActionsModal from 'components/ActionsModal.svelte';
 
   export let allAccounts;
   export let currentAccount = null;
   export let modalConfig = {
     show: false,
-    title: "",
-    message: "",
-    cancelAction: "",
-    proceedAction: "",
-    callback: null,
+    title: '',
+    message: '',
+    cancelAction: '',
+    proceedAction: '',
+    callback: null
   };
 
   function resetForm() {
     $form.username = null;
     $form.new_password = null;
-    $form.rank = "user";
+    $form.rank = 'user';
     currentAccount = null;
   }
 
@@ -29,7 +29,7 @@
     if (currentAccount) {
       $form.rank = currentAccount.rank;
     } else {
-      $form.rank = "user";
+      $form.rank = 'user';
     }
   }
 
@@ -38,29 +38,29 @@
     modalConfig.show = false;
     const response = await SendHTTPrequest({
       endpoint: `/accounts/${currentAccount._id.$oid}`,
-      method: "PATCH",
+      method: 'PATCH',
       headers: {
-        "Content-Type": "application/json",
+        'Content-Type': 'application/json'
       },
       data: {
         id: currentAccount._id.$oid,
-        new_password: temporaryPassword,
-      },
+        new_password: temporaryPassword
+      }
     });
     if (response.status === 200) {
       notificationStore.set({
         message: `New account password is: ${temporaryPassword}`,
-        type: "SUCCESS",
+        type: 'SUCCESS'
       });
     } else if (response.status === 404) {
       notificationStore.set({
-        message: "Not found account",
-        type: "ERROR",
+        message: 'Not found account',
+        type: 'ERROR'
       });
     } else {
       notificationStore.set({
         message: response.data.detail.message,
-        type: "ERROR",
+        type: 'ERROR'
       });
     }
   }
@@ -70,10 +70,10 @@
       show: true,
       title: `Reset password for ${currentAccount.username}`,
       message:
-        "This action will result in reseting password for account, new password will be prompted to you as notification for few seconds. Make sure user will change it!.",
-      cancelAction: "Cancel",
-      proceedAction: "Reset",
-      callback: resetPassword,
+        'This action will result in reseting password for account, new password will be prompted to you as notification for few seconds. Make sure user will change it!.',
+      cancelAction: 'Cancel',
+      proceedAction: 'Reset',
+      callback: resetPassword
     };
   }
 
@@ -81,24 +81,24 @@
     modalConfig.show = false;
     const response = await SendHTTPrequest({
       endpoint: `/accounts/${currentAccount._id.$oid}`,
-      method: "DELETE",
+      method: 'DELETE',
       headers: {
-        "Content-Type": "application/json",
-      },
+        'Content-Type': 'application/json'
+      }
     });
     if (response.status === 200) {
       notificationStore.set({
-        message: "Account has been deleted",
-        type: "SUCCESS",
+        message: 'Account has been deleted',
+        type: 'SUCCESS'
       });
       allAccounts = allAccounts.filter(
         (account) => account.username !== currentAccount.username
       );
-      resetForm()
+      resetForm();
     } else if (response.status === 404) {
       notificationStore.set({
-        message: "Not found account",
-        type: "ERROR",
+        message: 'Not found account',
+        type: 'ERROR'
       });
     }
   }
@@ -108,37 +108,37 @@
       show: true,
       title: `Delete ${currentAccount.username} account`,
       message:
-        "This action is irreversible. Whole account will be deleted, only documents linked to this account will persist.",
-      cancelAction: "Cancel",
-      proceedAction: "Delete",
-      callback: deleteAccount,
+        'This action is irreversible. Whole account will be deleted, only documents linked to this account will persist.',
+      cancelAction: 'Cancel',
+      proceedAction: 'Delete',
+      callback: deleteAccount
     };
   }
 
   async function createAccount(accountData) {
     const response = await SendHTTPrequest({
-      endpoint: "/accounts",
-      method: "POST",
+      endpoint: '/accounts',
+      method: 'POST',
       headers: {
-        "Content-Type": "application/json",
+        'Content-Type': 'application/json'
       },
-      data: accountData,
+      data: accountData
     });
     if (response.status === 201) {
       notificationStore.set({
-        message: "Added account",
-        type: "SUCCESS",
+        message: 'Added account',
+        type: 'SUCCESS'
       });
       allAccounts.push({
         _id: { $oid: response.data.id.$oid },
-        ...accountData,
+        ...accountData
       });
       allAccounts = allAccounts;
       resetForm();
     } else if (response.status > 400 && response.status < 500) {
       notificationStore.set({
-        message: "Could not create account.",
-        type: "ERROR",
+        message: 'Could not create account.',
+        type: 'ERROR'
       });
     }
   }
@@ -146,19 +146,19 @@
   async function updateAccount(accountData) {
     accountData.new_password = accountData.new_password
       ? accountData.new_password
-      : delete accountData["new_password"];
+      : delete accountData['new_password'];
     const response = await SendHTTPrequest({
       endpoint: `/accounts/${accountData.id}`,
-      method: "PATCH",
+      method: 'PATCH',
       headers: {
-        "Content-Type": "application/json",
+        'Content-Type': 'application/json'
       },
-      data: accountData,
+      data: accountData
     });
     if (response.status === 200) {
       notificationStore.set({
-        message: "Updated account.",
-        type: "SUCCESS",
+        message: 'Updated account.',
+        type: 'SUCCESS'
       });
       allAccounts = allAccounts.map((account) => {
         if (account._id.$oid === currentAccount._id.$oid) {
@@ -170,8 +170,8 @@
       resetForm();
     } else if (response.status > 400 && response.status < 500) {
       notificationStore.set({
-        message: "Could not update account.",
-        type: "ERROR",
+        message: 'Could not update account.',
+        type: 'ERROR'
       });
     }
   }
@@ -182,17 +182,17 @@
     form,
     errors,
     handleChange,
-    handleSubmit: handleAccountSubmit,
+    handleSubmit: handleAccountSubmit
   } = createForm({
     initialValues: {
       username: null,
       new_password: null,
-      rank: "user",
+      rank: 'user'
     },
     validationSchema: yup.object().shape({
       username: yup.string().min(1).nullable(true),
       new_password: yup.string().min(3).nullable(true),
-      rank: yup.string().oneOf(["admin", "user"]).nullable(true),
+      rank: yup.string().oneOf(['admin', 'user']).nullable(true)
     }),
     onSubmit: async (values) => {
       if (!currentAccount) {
@@ -200,7 +200,7 @@
       } else {
         await updateAccount({ id: currentAccount._id.$oid, ...values });
       }
-    },
+    }
   });
 </script>
 
@@ -284,7 +284,7 @@
     <input
       type="submit"
       class="dark:bg-gray-800 dark:active:bg-gray-900 dark:text-white rounded-lg shadow-md py-2 col-start-3"
-      value={currentAccount ? "Update" : "Add"}
+      value={currentAccount ? 'Update' : 'Add'}
     />
     <div class="flex col-span-3 mt-5">
       {#if currentAccount}

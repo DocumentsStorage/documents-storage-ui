@@ -1,5 +1,5 @@
 <script>
-    import { createEventDispatcher } from "svelte";
+    import { createEventDispatcher } from 'svelte';
 
     export let mediaThumbnailsList;
     export let mediaFilesList;
@@ -7,11 +7,11 @@
     const dispatch = createEventDispatcher();
 
     function convertMedia(file) {
-        dispatch("convertMedia", file);
+        dispatch('convertMedia', file);
     }
 
     function deleteFile(media_file_index, media_file_id) {
-        console.log("Schedule deletion", media_file_id);
+        console.log('Schedule deletion', media_file_id);
         if (media_file_id) {
             deletedMediaIds = [...deletedMediaIds, media_file_id];
         }
@@ -31,7 +31,7 @@
     async function dropHandler(event) {
         if (event.dataTransfer.items) {
             for (const item of event.dataTransfer.items) {
-                if (item.kind === "file") {
+                if (item.kind === 'file') {
                     const file = item.getAsFile();
                     convertMedia(file);
                 }

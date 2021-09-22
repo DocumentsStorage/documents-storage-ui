@@ -1,21 +1,21 @@
 <script>
-    import { SendHTTPrequest } from "services/api.js";
-    import { onMount } from "svelte";
+    import { SendHTTPrequest } from 'services/api.js';
+    import { onMount } from 'svelte';
 
     export let allDocuments;
     export let currentDocument;
 
     onMount(async () => {
         const response = await SendHTTPrequest({
-            endpoint: "/documents",
-            method: "GET",
+            endpoint: '/documents',
+            method: 'GET',
             headers: {
-                "Content-Type": "application/json",
-            },
+                'Content-Type': 'application/json'
+            }
         });
         allDocuments = response.data.map((document) => {
             document.media_files = document.media_files?.map(
-                (uuid) => uuid["$uuid"]
+                (uuid) => uuid['$uuid']
             );
             return document;
         });
@@ -34,7 +34,7 @@
                             <small
                                 >{documentType.description.length > 15
                                     ? documentType.description.slice(0, 15) +
-                                      "..."
+                                      '...'
                                     : documentType.description}</small
                             >
                         </div>
@@ -42,6 +42,7 @@
                             <span
                                 class="flex items-center pl-5 dark:text-white text-black"
                                 on:click={() => {
+                                    // eslint-disable-next-line @typescript-eslint/no-unused-vars
                                     currentDocument = documentType;
                                 }}
                             >

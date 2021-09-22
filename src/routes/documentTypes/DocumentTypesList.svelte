@@ -1,17 +1,17 @@
 <script>
-    import { SendHTTPrequest } from "services/api.js";
-    import { onMount } from "svelte";
+    import { SendHTTPrequest } from 'services/api.js';
+    import { onMount } from 'svelte';
 
     export let allDocumentTypes;
     export let currentDocumentType;
 
     onMount(async () => {
         const response = await SendHTTPrequest({
-            endpoint: "/document_types",
-            method: "GET",
+            endpoint: '/document_types',
+            method: 'GET',
             headers: {
-                "Content-Type": "application/json",
-            },
+                'Content-Type': 'application/json'
+            }
         });
         allDocumentTypes = response.data;
     });
@@ -31,7 +31,7 @@
                             <small
                                 >{documentType.description.length > 15
                                     ? documentType.description.slice(0, 15) +
-                                      "..."
+                                      '...'
                                     : documentType.description}</small
                             >
                         </div>
@@ -40,6 +40,7 @@
                             <span
                                 class="flex items-center pl-5 dark:text-white text-black"
                                 on:click={() => {
+                                    // eslint-disable-next-line @typescript-eslint/no-unused-vars
                                     currentDocumentType = documentType;
                                 }}
                                 >Select
