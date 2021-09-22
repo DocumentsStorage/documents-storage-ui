@@ -1,18 +1,18 @@
 <script>
-  import { createForm } from "svelte-forms-lib";
-  import * as yup from "yup";
-  import Cookies from "universal-cookie";
-  import jwt_decode from "jwt-decode";
-  import { SendHTTPrequest } from "../../services/api";
-  import { onMount } from "svelte";
-  import notificationStore from "../../components/NotificationStore.js";
+  import { createForm } from 'svelte-forms-lib';
+  import * as yup from 'yup';
+  import Cookies from 'universal-cookie';
+  import jwt_decode from 'jwt-decode';
+  import { SendHTTPrequest } from 'services/api.js';
+  import { onMount } from 'svelte';
+  import notificationStore from 'components/NotificationStore.js';
 
-  export let username = "";
+  export let username = '';
 
   onMount(async () => {
     const response = await SendHTTPrequest({
-      endpoint: "/accounts/session",
-      method: "GET",
+      endpoint: '/accounts/session',
+      method: 'GET'
     });
     username = response.data.username;
   });
@@ -20,41 +20,39 @@
   const {
     form,
     errors,
-    state,
     handleChange,
-    handleSubmit: handleUpdateAccount,
+    handleSubmit: handleUpdateAccount
   } = createForm({
     initialValues: {
-      username: "",
+      username: ''
     },
     validationSchema: yup.object().shape({
-      username: yup.string().min(2).required(),
+      username: yup.string().min(2).required()
     }),
     onSubmit: async (values) => {
       const cookies = new Cookies();
       const response = await SendHTTPrequest({
-        endpoint: "/accounts/update",
-        method: "PATCH",
+        endpoint: `/accounts/${jwt_decode(cookies.get('authToken')).client_id}`,
+        method: 'PATCH',
         headers: {
-          "Content-Type": "application/json",
+          'Content-Type': 'application/json'
         },
         data: {
-          id: jwt_decode(cookies.get("authToken")).client_id,
-          username: values.username,
-        },
+          username: values.username
+        }
       });
       if (response.status === 200) {
         notificationStore.set({
-          message: "Updated successfully",
-          type: "SUCCESS",
+          message: 'Updated successfully',
+          type: 'SUCCESS'
         });
       } else if (response.status > 400 && response.status < 500) {
         notificationStore.set({
-          message: "Could not change account data",
-          type: "ERROR",
+          message: 'Could not change account data',
+          type: 'ERROR'
         });
       }
-    },
+    }
   });
 </script>
 

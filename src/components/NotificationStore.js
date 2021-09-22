@@ -1,8 +1,8 @@
-import { writable } from "svelte/store";
+import { writable } from 'svelte/store';
 
 const notificationStore = writable({
-    message: "",
-    type: "SUCCESS",
+    message: '',
+    type: 'SUCCESS'
 });
 
-export default notificationStore
+export default notificationStore;

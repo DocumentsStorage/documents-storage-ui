@@ -1,26 +1,26 @@
 <script>
-	import { Router, Link, Route, navigate } from "svelte-routing";
-	import Cookies from "universal-cookie";
+	import { Router, Link, Route, navigate } from 'svelte-routing';
+	import Cookies from 'universal-cookie';
 
-	import Notification from "./components/Notification.svelte";
-	import Button from "./common/Button.svelte";
-	import ModLink from "./common/ModLink.svelte";
-	
-	import Login from "./routes/Login.svelte";
-	import Account from "./routes/account/Account.svelte";
-	import Documents from "./routes/documents/Documents.svelte";
-	import Manage from "./routes/manage/Manage.svelte";
-	import DocumentTypes from "./routes/documentTypes/DocumentsTypes.svelte";
+	import Notification from 'components/Notification.svelte';
+	import Button from 'common/Button.svelte';
+	import ModLink from 'common/ModLink.svelte';
 
-	import jwt_decode from "jwt-decode";
+	import Login from './routes/Login.svelte';
+	import Account from './routes/account/Account.svelte';
+	import Documents from './routes/documents/Documents.svelte';
+	import Manage from './routes/manage/Manage.svelte';
+	import DocumentTypes from './routes/documentTypes/DocumentTypes.svelte';
 
-	import { checkRoute, sessionInfo } from "./services/route-guard";
-	import { onMount } from "svelte";
+	import jwt_decode from 'jwt-decode';
 
-	export let url = "";
+	import { checkRoute, sessionInfo } from 'services/route-guard.js';
+	import { onMount } from 'svelte';
+
+	export let url = '';
 	export let showSettings = false;
 	export let isLogged = false;
-	export let rank = "";
+	export let rank = '';
 
 	sessionInfo.subscribe((value) => {
 		isLogged = value.isLogged;
@@ -29,22 +29,25 @@
 
 	function logout() {
 		const cookies = new Cookies();
-		cookies.remove("authToken");
+		cookies.remove('authToken');
 		sessionInfo.set({ isLogged: false });
-		navigate("/", { replace: true });
+		navigate('/', { replace: true });
 	}
 
 	// Routing guards
 	onMount(() => {
 		const cookies = new Cookies();
 		try {
-			const currentSessionInfo = jwt_decode(cookies.get("authToken"));
-			if (currentSessionInfo.exp > Date.now()/1000) {
+			const currentSessionInfo = jwt_decode(cookies.get('authToken'));
+			if (currentSessionInfo.exp > Date.now() / 1000) {
 				sessionInfo.set({ isLogged: true, ...currentSessionInfo });
 			} else {
-				cookies.remove("authToken");
+				cookies.remove('authToken');
 			}
-		} catch {}
+		} catch (e) {
+			return e;
+			// console.error(e);
+		}
 		checkRoute();
 	});
 </script>
@@ -73,9 +76,7 @@
 									on:click={() =>
 										(showSettings = !showSettings)}
 								>
-									<Button>
-										Settings
-									</Button>
+									<Button>Settings</Button>
 								</span>
 							</div>
 							{#if showSettings}
@@ -101,21 +102,21 @@
 												</ModLink>
 											</Link>
 										</span>
-										{#if rank === "admin"}
-										<span
-											role="menuitem"
-											tabindex="-1"
-											id="menu-item-1"
-											class="block my-2"
-										>
-											<Link to="/manage">
-												<ModLink>
-													<i
-														class="ph-table mr-2"
-													/>Manage
-												</ModLink>
-											</Link>
-										</span>
+										{#if rank === 'admin'}
+											<span
+												role="menuitem"
+												tabindex="-1"
+												id="menu-item-1"
+												class="block my-2"
+											>
+												<Link to="/manage">
+													<ModLink>
+														<i
+															class="ph-table mr-2"
+														/>Manage
+													</ModLink>
+												</Link>
+											</span>
 										{/if}
 										<span
 											role="menuitem"

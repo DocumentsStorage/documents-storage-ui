@@ -1,9 +1,9 @@
 <script>
-    import notificationStore from "./NotificationStore";
+    import notificationStore from 'components/NotificationStore.js';
 
     export let showNotification = false;
-    export let notificationMessage = "";
-    export let notificationType = "SUCCESS";
+    export let notificationMessage = '';
+    export let notificationType = 'SUCCESS';
 
     function showNotificationCall(message, type) {
         if (message.length > 0) {
@@ -27,7 +27,7 @@
         {notificationType === 'SUCCESS' && 'bg-green-500'} 
         {notificationType === 'WARNING' && 'bg-yellow-500'} 
         {notificationType === 'ERROR' && 'bg-red-500'} 
-        absolute py-2 px-6 rounded-full mt-5 mx-5
+        fixed py-2 px-6 rounded-full mt-5 mx-5
         "
     >
         <p>{notificationMessage}</p>

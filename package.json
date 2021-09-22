@@ -8,11 +8,16 @@
     "start": "sirv public -s"
   },
   "devDependencies": {
+    "@rollup/plugin-alias": "^3.1.5",
     "@rollup/plugin-commonjs": "^17.0.0",
     "@rollup/plugin-node-resolve": "^11.0.0",
     "@rollup/plugin-replace": "^3.0.0",
+    "@sveltejs/eslint-config": "github:sveltejs/eslint-config",
     "autoprefixer": "^10.3.4",
     "dotenv": "^10.0.0",
+    "eslint": "^7.32.0",
+    "eslint-plugin-import": "^2.24.2",
+    "eslint-plugin-svelte3": "^3.2.1",
     "postcss": "^8.3.6",
     "rollup": "^2.3.4",
     "rollup-plugin-css-only": "^3.1.0",

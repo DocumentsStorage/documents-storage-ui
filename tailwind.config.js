@@ -3,7 +3,7 @@ module.exports = {
   mode: 'jit',
   darkMode: 'media', // or 'media' or 'class'
   theme: {
-    extend: {},
+    extend: {}
   },
   variants: {
     extend: {
@@ -12,9 +12,9 @@ module.exports = {
   },
   purge: {
     content: [
-     "./src/**/*.svelte",
+     './src/**/*.svelte'
 
     ],
     enabled: production // disable purge in dev
-  },
-}
+  }
+};

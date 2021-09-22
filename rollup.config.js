@@ -4,10 +4,10 @@ import resolve from '@rollup/plugin-node-resolve';
 import livereload from 'rollup-plugin-livereload';
 import { terser } from 'rollup-plugin-terser';
 import css from 'rollup-plugin-css-only';
-import sveltePreprocess from "svelte-preprocess";
-
+import sveltePreprocess from 'svelte-preprocess';
 import replace from '@rollup/plugin-replace';
 import dotenv from 'dotenv';
+import alias from '@rollup/plugin-alias';
 
 dotenv.config();
 
@@ -51,10 +51,10 @@ export default {
 				sourceMap: !production,
 				postcss: {
 				  plugins: [
-				   require("tailwindcss"), 
-				   require("autoprefixer"),
-				  ],
-				},
+				   require('tailwindcss'), 
+				   require('autoprefixer')
+				  ]
+				}
 			}),
 			compilerOptions: {
 				hydratable: true,
@@ -70,7 +70,6 @@ export default {
             //     css.write('public/build/bundle.css');
             // },
 		}),
-		
 		// we'll extract any component CSS out into
 		// a separate file - better for performance
 		css({ output: 'bundle.css' }),
@@ -80,6 +79,14 @@ export default {
 		// some cases you'll need additional configuration -
 		// consult the documentation for details:
 		// https://github.com/rollup/plugins/tree/master/packages/commonjs
+		alias({
+			resolve: ['.svelte', '.js'], //optional, by default this will just look for .js files or folders
+			entries: [
+			  { find: 'services', replacement: 'src/services' },
+			  { find: 'components', replacement: 'src/components' },
+			  { find: 'common', replacement: 'src/common' }
+			]
+		}),
 		resolve({
 			browser: true,
 			dedupe: ['svelte']
