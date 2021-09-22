@@ -10,7 +10,7 @@
 	import Account from './routes/account/Account.svelte';
 	import Documents from './routes/documents/Documents.svelte';
 	import Manage from './routes/manage/Manage.svelte';
-	import DocumentTypes from './routes/documentTypes/DocumentsTypes.svelte';
+	import DocumentTypes from './routes/documentTypes/DocumentTypes.svelte';
 
 	import jwt_decode from 'jwt-decode';
 

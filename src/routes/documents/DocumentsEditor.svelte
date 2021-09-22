@@ -478,7 +478,7 @@
 
     <div class="h-3 col-span-3">
         <span
-            class="flex justify-end items-center cursor-pointer  dark:text-white text-right hover:text-red-500"
+            class="flex justify-end items-center cursor-pointer dark:text-white text-right hover:text-red-500"
             on:click={() => {
                 startDeleteDocument();
             }}
