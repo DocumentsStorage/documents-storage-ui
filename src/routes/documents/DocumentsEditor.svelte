@@ -3,12 +3,11 @@
     import * as yup from "yup";
     import { SendHTTPrequest } from "services/api.js";
     import notificationStore from "components/NotificationStore.js";
-    import Button from "common/Button.svelte";
     import Input from "common/Input.svelte";
     import MediaFilesBox from "./MediaFilesBox.svelte";
     import generatePdfThumbnails from "pdf-thumbnails-generator";
     import { onMount } from "svelte";
-    import ActionsModal from 'components/ActionsModal.svelte';
+    import ActionsModal from "components/ActionsModal.svelte";
 
     export let allDocuments;
     export let documentTypesList = [];
@@ -46,7 +45,7 @@
     }
 
     function resetForm() {
-        $form.title = null;
+        $form.title = "";
         $form.description = "";
         $form.fields = [
             {
@@ -55,6 +54,11 @@
                 valueType: "text",
             },
         ];
+
+        $errors.title = "";
+        $errors.description = "";
+        $errors.fields = [{}];
+
         for (const mediaBlob of mediaThumbnailsList) {
             URL.revokeObjectURL(mediaBlob);
         }
@@ -135,19 +139,25 @@
                     index < currentDocument.fields.length;
                     index++
                 ) {
-                    const element = currentDocument.fields[index];
-                    const valueType = parseFieldTypeToHTMLType(element.value);
-                    if (typeof element.value === "object") {
-                        element.value = new Date(element.value["$date"])
-                            .toISOString()
-                            .split("T")[0];
+                    let element = currentDocument.fields[index];
+                    console.log("LOADING", element)
+                    if(!element.valueType){
+                        element = {...element, valueType: parseFieldTypeToHTMLType(element.value)}
+                    }
+                    if (typeof element.value === "object" || element.valueType === "date") {
+                        if(element.value["$date"]){
+                            element.value = new Date(element.value["$date"]).toISOString().split("T")[0];
+                        } else {
+                            element.value = new Date(element.value).toISOString().split("T")[0];
+                        }
                     }
                     $form.fields.push({
                         name: element.name,
                         value: element.value,
-                        valueType,
+                        valueType: element.valueType,
                     });
                 }
+
             }
         }
     }
@@ -214,14 +224,14 @@
         // Add new files
         const newMediaFilesIDs = await uploadFilesAPI();
 
-        let updatedMediaIDs = mediaThumbnailsList.map(file=> file.id)
-        updatedMediaIDs = updatedMediaIDs.filter((id) => id !== undefined)
+        let updatedMediaIDs = mediaThumbnailsList.map((file) => file.id);
+        updatedMediaIDs = updatedMediaIDs.filter((id) => id !== undefined);
 
         updatedMediaIDs = [...updatedMediaIDs, ...newMediaFilesIDs];
 
         data = {
             ...data,
-            media_files: updatedMediaIDs
+            media_files: updatedMediaIDs,
         };
 
         const response = await SendHTTPrequest({
@@ -237,9 +247,20 @@
                 message: "Updated successfully.",
                 type: "SUCCESS",
             });
-            const index = allDocuments.findIndex((document) => document._id.$oid === currentDocument._id.$oid)
-            allDocuments[index] = data
-            allDocuments = allDocuments
+            const index = allDocuments.findIndex(
+                (document) => document._id.$oid === currentDocument._id.$oid
+            );
+            data.fields = data.fields.map((field) => {
+                if(!field.valueType){
+                    field = {...field, valueType: parseFieldTypeToHTMLType(field.value)}
+                }
+                if (field.valueType === "date") {
+                    field.value = new Date(field.value)
+                }
+                return field;
+            });
+            allDocuments[index] = data;
+            allDocuments = allDocuments;
         } else if (response.status > 400 && response.status < 500) {
             notificationStore.set({
                 message: "Could not update document.",
@@ -267,24 +288,23 @@
                 message: "Added successfully.",
                 type: "SUCCESS",
             });
-            // documentData.fields = documentData.fields.map((field) => {
-            //     const valueType = parseFieldTypeToHTMLType(field.value);
-            //     if (typeof field.value === "object") {
-            //         field.value = new Date(field.value["$date"])
-            //             .toISOString()
-            //             .split("T")[0];
-            //     }
-            //     field.valueType = valueType;
-            //     return field;
-            // });
+            documentData.fields = documentData.fields.map((field) => {
+                if(!field.valueType){
+                    field = {...field, valueType: parseFieldTypeToHTMLType(field.value)}
+                }
+                if (typeof field.valueType === "date") {
+                    field.value = new Date(field.value)
+                }
+                return field;
+            });
             allDocuments.push({
                 _id: { $oid: response.data.id.$oid },
                 ...documentData,
                 media_files: mediaFilesIDs,
             });
             allDocuments = allDocuments;
-            currentDocument = null
-            resetForm()
+            currentDocument = null;
+            resetForm();
         } else if (response.status > 400 && response.status < 500) {
             notificationStore.set({
                 message: "Could not add document.",
@@ -311,8 +331,8 @@
                 (documentType) =>
                     documentType._id.$oid !== currentDocument._id.$oid
             );
-            currentDocument = null
-            resetForm()
+            currentDocument = null;
+            resetForm();
         } else if (response.status === 404) {
             notificationStore.set({
                 message: "Not found document",
@@ -396,7 +416,7 @@
                 await createDocumentAPI(values);
             } else {
                 await updateDocumentAPI({
-                    _id: {$oid: currentDocument._id.$oid},
+                    _id: { $oid: currentDocument._id.$oid },
                     ...values,
                 });
             }
@@ -414,79 +434,72 @@
     };
 </script>
 
-<form on:submit={handleDocumentSubmit} class="grid gap-7 grid-cols-3 my-5">
-    <div class="w-full col-span-3 flex justify-between">
-        <h1 class="text-2xl">
-            {#if currentDocument}
-                Update document
-            {:else}
-                Add document
-            {/if}
-        </h1>
-        {#if currentDocument}
-            <i
-                on:click={() => {
-                    currentDocument = null;
-                    resetForm();
-                }}
-                class="ph-x mr-2"
+<form
+    on:submit={handleDocumentSubmit}
+    class="grid gap-5 grid-cols-3 my-5 relative"
+>
+    <div class="w-full col-span-3 flex items-center justify-between">
+        <div>
+            <input
+                id="title"
+                name="title"
+                placeholder="Document title"
+                class="w-full dark:bg-gray-900 font-bold px-2 py-1"
+                on:change={handleChange}
+                bind:value={$form.title}
             />
-        {/if}
+        </div>
+        <div class="w-full flex justify-between text-left pl-4">
+            <p class="dark:text-gray-500">
+                {#if currentDocument}
+                    Updating Document
+                {:else}
+                    New Document, unsaved
+                {/if}
+            </p>
+            <span class="cursor-pointer">
+                {#if currentDocument}
+                    <i
+                        on:click={() => {
+                            currentDocument = null;
+                            resetForm();
+                        }}
+                        class="ph-x"
+                    />
+                {/if}
+            </span>
+        </div>
     </div>
-    <label class="my-2" for="documentType">Document Type</label>
-    <select
-        name="documentType"
-        bind:value={currentDocumentType}
-        on:change={changeDocumentType}
-        class="dark:bg-gray-900 font-bold px-2 my-1"
-    >
-        <option value="none" />
-        {#each documentTypesList as documentType}
-            <option value={documentType.title}>{documentType.title}</option>
-        {/each}
-    </select>
-    {#if currentDocument}
-        <span
-            class="flex items-center pl-5 dark:text-white text-black hover:text-red-500 cursor-pointer"
-            on:click={() => {
-                startDeleteDocument();
-            }}
-            ><i class="ph-file-minus mx-2" />
-            Delete</span
-        >
-    {/if}
-    <div class="col-span-3">
-        <label class="my-2" for="title">Title</label>
-        <input
-            id="title"
-            name="title"
-            class="w-full dark:bg-gray-900 font-bold px-2"
-            on:change={handleChange}
-            bind:value={$form.title}
-        />
-    </div>
-    <small class="col-span-3 h-3">
+    <small class="col-span-3 h-1 text-red-300">
         {#if $errors.title}
             {$errors.title}
         {/if}
     </small>
 
+    <div class="h-3 col-span-3">
+        <span
+            class="flex justify-end items-center cursor-pointer  dark:text-white text-right hover:text-red-500"
+            on:click={() => {
+                startDeleteDocument();
+            }}
+        >
+            {#if currentDocument}
+                <i class="ph-file-minus mx-2" />
+                Delete Document
+            {/if}
+        </span>
+    </div>
     <div class="col-span-3">
-        <label class="my-2" for="description">Description</label>
-        <input
+        <textarea
+            rows="5"
             id="description"
             name="description"
-            class="w-full dark:bg-gray-900 font-bold px-2"
+            placeholder="Description"
+            class="w-full dark:bg-gray-900 font-bold px-3 py-1 h-16"
             on:change={handleChange}
             bind:value={$form.description}
         />
     </div>
-    <small class="col-span-3 h-5">
-        {#if $errors.description}
-            {$errors.description}
-        {/if}
-    </small>
-
     <MediaFilesBox
         bind:mediaThumbnailsList
         bind:mediaFilesList
@@ -495,59 +508,88 @@
             mediaConverter(file);
         }}
     />
-
-    <h1 class="text-2xl col-span-3">Fields</h1>
-
+    <hr class="col-span-3 my-5" />
+    <label class="col-span-3" for="documentType">Document Type</label>
+    <select
+        name="documentType"
+        class="dark:bg-gray-900 font-bold px-2 py-1"
+        bind:value={currentDocumentType}
+        on:change={changeDocumentType}
+    >
+        <option value="none" />
+        {#each documentTypesList as documentType}
+            <option value={documentType.title}>{documentType.title}</option>
+        {/each}
+    </select>
     {#each $form.fields as field, j}
-        <div class="col-span-3 mt-5">
-            <div>
-                <input
-                    name={`fields[${j}].name`}
-                    placeholder="Field name"
-                    class="w-full dark:bg-gray-900 font-bold px-2 my-1"
-                    on:change={handleChange}
-                    on:blur={handleChange}
-                    bind:value={$form.fields[j].name}
-                />
-            </div>
-            <small class="h-4 inline-block">
-                {#if $errors.fields[j]?.name}
-                    {$errors.fields[j]?.name}
-                {/if}
-            </small>
+        <div class="col-span-3 mt-5 flex">
+            <div class="w-4/5 flex-none">
+                <div>
+                    <input
+                        name={`fields[${j}].name`}
+                        placeholder="Field name"
+                        class="w-2/3 dark:bg-gray-900 font-bold px-2 my-1"
+                        on:change={handleChange}
+                        on:blur={handleChange}
+                        bind:value={$form.fields[j].name}
+                    />
+                </div>
+                <small class="h-4 inline-block text-red-300">
+                    {#if $errors.fields[j]?.name}
+                        {$errors.fields[j]?.name}
+                    {/if}
+                </small>
 
-            <div class="col-span-3">
-                <Input
-                    index={j}
-                    name={`fields[${j}].value`}
-                    value={field.value}
-                    type={field.valueType}
-                    placeholder={field.name + " value"}
-                    on:change={handleChange}
-                    on:blur={handleChange}
-                    on:changeValue={InputChangeValue}
-                />
+                <div>
+                    <Input
+                        index={j}
+                        name={`fields[${j}].value`}
+                        value={field.value}
+                        type={field.valueType}
+                        placeholder={field.name + " value"}
+                        on:change={handleChange}
+                        on:blur={handleChange}
+                        on:changeValue={InputChangeValue}
+                    />
+                </div>
+                <small class="h-4 inline-block text-red-300">
+                    {#if $errors.fields[j]?.value}
+                        {$errors.fields[j]?.value}
+                    {/if}
+                </small>
             </div>
-            <small class="h-4 inline-block">
-                {#if $errors.fields[j]?.value}
-                    {$errors.fields[j]?.value}
-                {/if}
-            </small>
+            <div class="sm:w-1/5 ml-5 sm:m-0 flex-none">
+                <div class="h-24 flex flex-wrap content-center justify-end">
+                    {#if $form.fields.length !== 1}
+                        <span
+                            on:click={removeField(j)}
+                            class="bg-gray-600 active:border-yello-500 hover:border-yellow-400 hover:bg-yellow-500 duration-100 rounded-full px-3 sm:px-4 py-1 flex items-center border cursor-pointer"
+                            ><i class="ph-minus text-lg" /></span
+                        >
+                    {/if}
+                </div>
+            </div>
         </div>
-
-        {#if j === $form.fields.length - 1}
-            <span on:click={addField}><Button>Add Field</Button></span>
-        {/if}
-        {#if $form.fields.length !== 1}
-            <span on:click={removeField(j)}><Button>Remove field</Button></span>
-        {/if}
+        <div class="col-span-3">
+            <div class="flex justify-center">
+                {#if j === $form.fields.length - 1}
+                    <span
+                        on:click={addField}
+                        class="bg-gray-600 active:border-green-500 hover:border-green-400 hover:bg-green-500 duration-100 rounded-full px-6 py-2 flex items-center border cursor-pointer"
+                        ><i class="ph-plus text-lg" /></span
+                    >
+                {/if}
+            </div>
+        </div>
     {/each}
-
-    <input
-        type="submit"
-        class="dark:bg-gray-800 dark:active:bg-gray-900 dark:text-white rounded-lg shadow-md py-2 px-5 col-start-3"
-        value={currentDocument ? "Update" : "Add"}
-    />
+    <div class="col-span-3 flex justify-end mt-5">
+        <div class="fixed bottom-4 mr-3">
+            <input
+                type="submit"
+                class="dark:bg-gray-800 dark:active:bg-gray-900 dark:text-white hover:text-green-400 duration-200 rounded-lg shadow-md py-2 px-10 cursor-pointer"
+                value={currentDocument ? "Update Document" : "Add Document"}
+            />
+        </div>
+    </div>
 </form>
 <ActionsModal on:proceed={modalConfig.callback} {...modalConfig} />
-
