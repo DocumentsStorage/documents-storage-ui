@@ -11,6 +11,7 @@
 	import Documents from './routes/documents/Documents.svelte';
 	import Manage from './routes/manage/Manage.svelte';
 	import DocumentTypes from './routes/documentTypes/DocumentTypes.svelte';
+	import Tags from './routes/tags/Tags.svelte';
 
 	import jwt_decode from 'jwt-decode';
 
@@ -161,6 +162,7 @@
 			<Route path="/account"><Account /></Route>
 			<Route path="/manage"><Manage /></Route>
 			<Route path="/document-types"><DocumentTypes /></Route>
+			<Route path="/tags"><Tags /></Route>
 		</div>
 	</Router>
 </main>
