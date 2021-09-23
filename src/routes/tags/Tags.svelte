@@ -82,7 +82,7 @@
             show: true,
             title: `Delete ${tag_name} tag`,
             message:
-                "This action is irreversible. Tag will be deleted, from all documents this tag will be deleted.",
+                "This action is irreversible. This Tag will be deleted, also it will be deleted from all documents with this tag.",
             cancelAction: "Cancel",
             proceedAction: "Delete",
             callback: deleteTagAPI,
@@ -136,7 +136,7 @@
                         </div>
                         <div class="w-1/3 mx-5 flex">
                             <span
-                                class="flex items-center pl-5 dark:text-white text-black hover:text-red-500"
+                                class="flex items-center pl-5 dark:text-white text-black hover:text-red-500 cursor-pointer"
                                 on:click={() => {
                                     if (tag._id) {
                                         tagToDelete = tag._id["$oid"];
