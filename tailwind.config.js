@@ -7,7 +7,7 @@ module.exports = {
   },
   variants: {
     extend: {
-      backgroundColor: ['responsive', 'hover', 'focus', 'active']
+      backgroundColor: ['responsive', 'hover', 'focus', 'active', 'visited']
     }
   },
   purge: {

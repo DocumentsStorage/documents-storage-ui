@@ -92,8 +92,11 @@
                 );
             }
             if (loaded) {
-                setupDocuments(loaded.documents);
-                currentPage--;
+                if(loaded.documents.length > 0){
+                    totalDocumentsCount = loaded.total;
+                    setupDocuments(loaded.documents);
+                    currentPage--;
+                }
             }
         }
     }
@@ -113,8 +116,11 @@
                 );
             }
             if (loaded) {
-                setupDocuments(loaded.documents);
-                currentPage++;
+                if(loaded.documents.length > 0){
+                    totalDocumentsCount = loaded.total;
+                    setupDocuments(loaded.documents);
+                    currentPage++;
+                }
             }
         }
     }

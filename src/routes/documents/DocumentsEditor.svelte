@@ -29,6 +29,7 @@
     };
 
     $: currentDocumentType;
+    $: currentDocument, loadDocument();
 
     function parseFieldTypeToHTMLType(value) {
         const type = typeof value;
@@ -71,7 +72,6 @@
         mediaThumbnailsList = [];
     }
 
-    $: currentDocument, loadDocument();
 
     onMount(async () => {
         let result = await SendHTTPrequest({
@@ -108,10 +108,10 @@
     }
 
     async function mediaConverter(event) {
-        let file;
-        event.detail ? (file = event.detail) : (file = event);
+        let file = event.detail ? event.detail : event;
         const blob = new Blob([file], { type: file.type });
         mediaFilesList = [...mediaFilesList, { file }];
+        console.log(mediaFilesList)
         await createThumbnail(blob);
     }
 
@@ -553,6 +553,7 @@
             {/each}
         {/if}
     </div>
+
     <select
         on:change={(e) => {
             addTag(e.target.value);
