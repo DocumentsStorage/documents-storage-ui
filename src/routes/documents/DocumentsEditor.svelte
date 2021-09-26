@@ -151,7 +151,6 @@
                     index++
                 ) {
                     let element = currentDocument.fields[index];
-                    console.log("LOADING", element);
                     if (!element.valueType) {
                         element = {
                             ...element,
