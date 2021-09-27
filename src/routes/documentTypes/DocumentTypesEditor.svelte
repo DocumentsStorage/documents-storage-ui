@@ -181,7 +181,7 @@
 
 <form on:submit={handleDocumentTypeSubmit} class="grid gap-7 grid-cols-3 my-5">
   <div class="col-span-3 flex justify-between">
-    <h1 class="text-2xl">
+    <h1>
       {#if currentDocumentType}
         Update document type
       {:else}
@@ -244,7 +244,7 @@
     {/if}
   </small>
 
-  <h1 class="text-2xl">Fields</h1>
+  <h1>Fields</h1>
 
   {#each $form.fields as field, j}
     <div class="col-span-3 mt-5 flex">

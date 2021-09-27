@@ -1,26 +1,27 @@
 <script>
-	import { Router, Link, Route, navigate } from 'svelte-routing';
-	import Cookies from 'universal-cookie';
+	import { Router, Link, Route, navigate } from "svelte-routing";
+	import Cookies from "universal-cookie";
 
-	import Notification from 'components/Notification.svelte';
-	import Button from 'common/Button.svelte';
-	import ModLink from 'common/ModLink.svelte';
+	import Notification from "components/Notification.svelte";
+	import Button from "common/Button.svelte";
+	import ModLink from "common/ModLink.svelte";
 
-	import Login from './routes/Login.svelte';
-	import Account from './routes/account/Account.svelte';
-	import Documents from './routes/documents/Documents.svelte';
-	import Manage from './routes/manage/Manage.svelte';
-	import DocumentTypes from './routes/documentTypes/DocumentTypes.svelte';
+	import Login from "./routes/Login.svelte";
+	import Account from "./routes/account/Account.svelte";
+	import Documents from "./routes/documents/Documents.svelte";
+	import Manage from "./routes/manage/Manage.svelte";
+	import DocumentTypes from "./routes/documentTypes/DocumentTypes.svelte";
+	import Tags from "./routes/tags/Tags.svelte";
 
-	import jwt_decode from 'jwt-decode';
+	import jwt_decode from "jwt-decode";
 
-	import { checkRoute, sessionInfo } from 'services/route-guard.js';
-	import { onMount } from 'svelte';
+	import { checkRoute, sessionInfo } from "services/route-guard.js";
+	import { onMount } from "svelte";
 
-	export let url = '';
+	export let url = "";
 	export let showSettings = false;
 	export let isLogged = false;
-	export let rank = '';
+	export let rank = "";
 
 	sessionInfo.subscribe((value) => {
 		isLogged = value.isLogged;
@@ -29,20 +30,20 @@
 
 	function logout() {
 		const cookies = new Cookies();
-		cookies.remove('authToken');
+		cookies.remove("authToken");
 		sessionInfo.set({ isLogged: false });
-		navigate('/', { replace: true });
+		navigate("/", { replace: true });
 	}
 
 	// Routing guards
 	onMount(() => {
 		const cookies = new Cookies();
 		try {
-			const currentSessionInfo = jwt_decode(cookies.get('authToken'));
+			const currentSessionInfo = jwt_decode(cookies.get("authToken"));
 			if (currentSessionInfo.exp > Date.now() / 1000) {
 				sessionInfo.set({ isLogged: true, ...currentSessionInfo });
 			} else {
-				cookies.remove('authToken');
+				cookies.remove("authToken");
 			}
 		} catch (e) {
 			return e;
@@ -59,9 +60,9 @@
 	<Router {url}>
 		<div class="shadow-lg">
 			<div class="flex justify-between items-center p-5 mx-4">
-				<p class="dark:text-white text-3xl font-bold">
+				<h1 class="dark:text-white font-bold">
 					Documents Storage
-				</p>
+				</h1>
 
 				<!-- Routes -->
 				<nav>
@@ -102,7 +103,7 @@
 												</ModLink>
 											</Link>
 										</span>
-										{#if rank === 'admin'}
+										{#if rank === "admin"}
 											<span
 												role="menuitem"
 												tabindex="-1"
@@ -166,11 +167,23 @@
 </main>
 
 <style global lang="postcss">
-	@import url("https://unpkg.com/phosphor-icons@1.3.2/src/css/phosphor.css");
-	@import url("https://fonts.googleapis.com/css2?family=Raleway:wght@300;400;600&display=swap");
-	:global(:root) {
-		font-family: "Raleway", sans-serif;
+	@import url("/phosphor.css");
+
+	@font-face {
+		font-family: "Poppins";
+		src: url("/fonts/Poppins/Poppins-Regular.ttf");
 	}
+
+	@font-face {
+		font-family: "Raleway";
+		src: url("/fonts/Raleway/Raleway-Regular.ttf");
+	}
+
+	:global(:root) {
+		font-family: "Poppins", sans-serif;
+	}
+
+
 	:global(body) {
 		padding: 0;
 	}
@@ -179,6 +192,17 @@
 	@tailwind components;
 	@tailwind utilities;
 
+	@layer base {
+		h1, h2, h3 {
+			font-family: "Raleway"
+		}
+		h1 {
+			@apply text-2xl;
+		}
+		h2 {
+			@apply text-xl;
+		}
+	}
 	nav > * {
 		margin: 0 1rem;
 	}
