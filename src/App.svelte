@@ -6,18 +6,19 @@
 	import Button from "common/Button.svelte";
 	import ModLink from "common/ModLink.svelte";
 
-	import Login from './routes/Login.svelte';
-	import Account from './routes/account/Account.svelte';
-	import Documents from './routes/documents/Documents.svelte';
-	import Manage from './routes/manage/Manage.svelte';
-	import DocumentTypes from './routes/documentTypes/DocumentTypes.svelte';
-	import Tags from './routes/tags/Tags.svelte';
+	import Login from "./routes/Login.svelte";
+	import Account from "./routes/account/Account.svelte";
+	import Documents from "./routes/documents/Documents.svelte";
+	import Manage from "./routes/manage/Manage.svelte";
+	import DocumentTypes from "./routes/documentTypes/DocumentTypes.svelte";
+	import Tags from "./routes/tags/Tags.svelte";
 
 	import jwt_decode from "jwt-decode";
 
 	import { checkRoute, sessionInfo } from "services/route-guard.js";
 	import { onMount } from "svelte";
 
+	export let fullScreenMenuOpen = false;
 	export let url = "";
 	export let showSettings = false;
 	export let isLogged = false;
@@ -60,17 +61,47 @@
 	<Router {url}>
 		<div class="shadow-lg">
 			<div class="flex justify-between items-center p-5 mx-4">
-				<h1 class="dark:text-white font-bold">
-					Documents Storage
-				</h1>
+				<h1 class="dark:text-white font-bold">Documents Storage</h1>
+				<p
+					class="md:hidden p-2 rounded bg-gray-700 flex items-center text-xl"
+					on:click={() => {
+						let mobileMenu = document.getElementById("mobileMenu");
+						mobileMenu.classList.toggle("active");
+						fullScreenMenuOpen = true;
+					}}
+				>
+					<i class="ph-list" />
+				</p>
 
 				<!-- Routes -->
-				<nav>
+				<nav
+					on:click={() => {
+						let mobileMenu = document.getElementById("mobileMenu");
+						mobileMenu.classList.remove("active");
+						fullScreenMenuOpen = false;
+					}}
+					class="hidden absolute inset-0 bg-gray-900 px-2 py-2 flex md:block md:static md:flex-row md:mt-0 md:bg-transparent"
+					id="mobileMenu"
+				>
+					{#if fullScreenMenuOpen}
+						<div
+							on:click={() => {
+								let mobileMenu =
+									document.getElementById("mobileMenu");
+								mobileMenu.classList.toggle("active");
+								fullScreenMenuOpen = false;
+							}}
+							class="flex justify-end text-2xl"
+						>
+							<i class="ph-x" />
+						</div>
+					{/if}
 					{#if !isLogged}
 						<Link to="/"><Button>Login</Button></Link>
 					{/if}
 					{#if isLogged}
 						<Link to="/documents"><Button>Documents</Button></Link>
+						<!-- Large -->
 						<div class="relative inline-block text-left">
 							<div>
 								<span
@@ -80,7 +111,7 @@
 									<Button>Settings</Button>
 								</span>
 							</div>
-							{#if showSettings}
+							{#if showSettings && !fullScreenMenuOpen}
 								<div
 									class="origin-top-right absolute right-0 mt-2 w-56 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 focus:outline-none dark:bg-gray-800"
 									role="menu"
@@ -152,18 +183,42 @@
 								</div>
 							{/if}
 						</div>
+						<!-- Mobile -->
+						{#if fullScreenMenuOpen}
+							<div class="md:hidden">
+								<Link to="/account" class="mx-5"
+									><Button>Account</Button></Link
+								>
+								<Link to="/manage"><Button>Manage</Button></Link
+								>
+								<a class="mx-5" href="https://github.com/DocumentsStorage"
+									><Button>
+									<i class="ph-lifebuoy mr-2" />App
+										support</Button
+									></a
+								>
+								<span class="mx-5" on:click={() => logout()}
+									><Button
+										><i class="ph-sign-out mr-2 ml-1" />Sign
+										out</Button
+									></span
+								>
+							</div>
+						{/if}
 					{/if}
 				</nav>
 			</div>
 		</div>
-		<div class="flex justify-center">
-			<Route path="/"><Login /></Route>
-			<Route path="/documents"><Documents /></Route>
-			<Route path="/account"><Account /></Route>
-			<Route path="/manage"><Manage /></Route>
-			<Route path="/document-types"><DocumentTypes /></Route>
-			<Route path="/tags"><Tags /></Route>
-		</div>
+		{#if !fullScreenMenuOpen}
+			<div class="flex justify-center">
+				<Route path="/"><Login /></Route>
+				<Route path="/documents"><Documents /></Route>
+				<Route path="/account"><Account /></Route>
+				<Route path="/manage"><Manage /></Route>
+				<Route path="/document-types"><DocumentTypes /></Route>
+				<Route path="/tags"><Tags /></Route>
+			</div>
+		{/if}
 	</Router>
 </main>
 
@@ -184,7 +239,6 @@
 		font-family: "Poppins", sans-serif;
 	}
 
-
 	:global(body) {
 		padding: 0;
 	}
@@ -194,8 +248,10 @@
 	@tailwind utilities;
 
 	@layer base {
-		h1, h2, h3 {
-			font-family: "Raleway"
+		h1,
+		h2,
+		h3 {
+			font-family: "Raleway";
 		}
 		h1 {
 			@apply text-2xl;
@@ -209,5 +265,8 @@
 	}
 	nav a:hover {
 		text-decoration: none;
+	}
+	.active {
+		display: block;
 	}
 </style>
