@@ -85,7 +85,7 @@
   </small>
   <input
     type="submit"
-    class="dark:bg-gray-800 dark:active:bg-gray-900 dark:text-white rounded-lg shadow-md py-2 px-5 col-start-3"
+    class="dark:bg-gray-800 dark:active:bg-gray-900 dark:text-white rounded-lg shadow-md py-2 px-5 col-start-2 col-span-2 md:col-start-3 md:col-span-0"
     value="Update password"
   />
 </form>

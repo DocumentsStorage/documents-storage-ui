@@ -129,12 +129,12 @@
                         <!-- Inline -->
                         <div class="w-2/3 ml-2">
                             <input
-                                class="dark:bg-gray-900 font-bold px-2 my-1"
+                                class="dark:bg-gray-900 w-full font-bold px-2 my-1"
                                 on:change={() => changeTagName(tag._id?.$oid)}
                                 bind:value={tag.name}
                             />
                         </div>
-                        <div class="w-1/3 mx-5 flex">
+                        <div class="w-1/3 mx-2 flex">
                             <span
                                 class="flex items-center pl-5 dark:text-white text-black hover:text-red-500 cursor-pointer"
                                 on:click={() => {
