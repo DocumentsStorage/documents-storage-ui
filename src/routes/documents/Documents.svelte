@@ -12,7 +12,8 @@
 <div class="w-full mx-5 xl:mx-0 xl:w-1/2">
     <div class="flex items-center mt-5">
         <h1 class="text-2xl mr-5">Documents</h1>
-        <Link to="/document-types"><Button>Document types</Button></Link>
+        <Link to="/document-types" class="mx-5"><Button>Document types</Button></Link>
+        <Link to="/tags" class="mx-5"><Button>Tags</Button></Link>
     </div>
     <div class="grid sm:grid-cols-4 gap-5 sm:gap-20 md:gap-10">
         <div class="col-span-2">

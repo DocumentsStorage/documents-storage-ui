@@ -71,6 +71,15 @@
                         >
                             <i class="ph-x text-xl rounded bg-gray-600 duration-100 hover:text-red-400 hover:bg-red-100" />
                         </div>
+                        {#if mediaFilesList[i].file.length > 0}
+                        <a
+                            target="_blank"
+                            href={mediaFilesList[i].file}
+                            class="absolute visited:text-green-400 bottom-0 right-0 pr-2 cursor-pointer"
+                        >
+                            <i class="ph-download-simple text-xl rounded bg-gray-600 duration-100 hover:text-green-400 hover:bg-green-100" />
+                        </a>
+                        {/if}
                     </div>
                 </div>
                 {/each}
