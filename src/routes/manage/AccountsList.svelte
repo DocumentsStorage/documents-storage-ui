@@ -18,7 +18,7 @@
 </script>
 
 <div class="w-full rounded-md shadow-lg">
-    <h1 class="text-xl">Accounts</h1>
+    <h2>Accounts</h2>
     <ul class="mt-5">
         {#each allAccounts as account}
             <li class="dark:bg-gray-600 rounded mt-5 p-2 flex items-center">

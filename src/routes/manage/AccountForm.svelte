@@ -207,7 +207,7 @@
 <div class="w-full mt-5 rounded-md shadow-lg dark:bg-gray-800 p-1">
   <form on:submit={handleAccountSubmit} class="grid grid-cols-3">
     <div class="col-span-3 flex justify-between">
-      <h1 class="text-2xl">
+      <h1>
         {#if currentAccount}
           Update account
         {:else}

@@ -55,7 +55,7 @@
   class="lg:xl:2xl:w-1/3 mt-5 rounded-md shadow-lg dark:bg-gray-800 flex justify-center"
 >
   <form on:submit={handleLogin} class="grid gap-5 grid-cols-3 my-5">
-    <h1 class="text-2xl col-span-3">Login</h1>
+    <h1 class="col-span-3">Login</h1>
     <div class="col-span-3">
       <label class="my-2" for="username">Username</label>
       <input

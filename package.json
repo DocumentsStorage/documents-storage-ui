@@ -13,6 +13,7 @@
     "@rollup/plugin-node-resolve": "^11.0.0",
     "@rollup/plugin-replace": "^3.0.0",
     "@sveltejs/eslint-config": "github:sveltejs/eslint-config",
+    "@typescript-eslint/eslint-plugin": "^4.32.0",
     "autoprefixer": "^10.3.4",
     "dotenv": "^10.0.0",
     "eslint": "^7.32.0",
