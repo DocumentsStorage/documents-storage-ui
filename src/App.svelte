@@ -80,7 +80,7 @@
 						mobileMenu.classList.remove("active");
 						fullScreenMenuOpen = false;
 					}}
-					class="hidden absolute inset-0 bg-gray-900 px-2 py-2 flex md:block md:static md:flex-row md:mt-0 md:bg-transparent"
+					class="hidden absolute inset-0 bg-gray-900 pl-12 py-2 md:px-2 flex md:block md:static md:flex-row md:mt-0 md:bg-transparent"
 					id="mobileMenu"
 				>
 					{#if fullScreenMenuOpen}
@@ -97,12 +97,12 @@
 						</div>
 					{/if}
 					{#if !isLogged}
-						<Link to="/"><Button>Login</Button></Link>
+						<Link to="/" class="nav_mobile_btn md:mt-0 md:inline-block"><Button>Login</Button></Link>
 					{/if}
 					{#if isLogged}
-						<Link to="/documents"><Button>Documents</Button></Link>
+						<Link to="/documents" class="nav_mobile_btn md:mt-0 md:inline-block"><Button>Documents</Button></Link>
 						<!-- Large -->
-						<div class="relative inline-block text-left">
+						<div class="relative nav_mobile_btn md:mt-0 md:inline-block text-left">
 							<div>
 								<span
 									on:click={() =>
@@ -185,19 +185,22 @@
 						</div>
 						<!-- Mobile -->
 						{#if fullScreenMenuOpen}
-							<div class="md:hidden">
-								<Link to="/account" class="mx-5"
+							<div class="md:hidden nav_mobile_btn">
+								<Link to="/account" class="nav_mobile_btn"
 									><Button>Account</Button></Link
 								>
-								<Link to="/manage"><Button>Manage</Button></Link
+								<Link to="/manage" class="nav_mobile_btn"
+									><Button>Manage</Button></Link
 								>
-								<a class="mx-5" href="https://github.com/DocumentsStorage"
+								<a
+									class="nav_mobile_btn"
+									href="https://github.com/DocumentsStorage"
 									><Button>
-									<i class="ph-lifebuoy mr-2" />App
+										<i class="ph-lifebuoy mr-2" />App
 										support</Button
 									></a
 								>
-								<span class="mx-5" on:click={() => logout()}
+								<span class="nav_mobile_btn" on:click={() => logout()}
 									><Button
 										><i class="ph-sign-out mr-2 ml-1" />Sign
 										out</Button
@@ -265,6 +268,11 @@
 	}
 	nav a:hover {
 		text-decoration: none;
+	}
+
+	.nav_mobile_btn {
+		display: block;
+		margin-top: 3.5rem;
 	}
 	.active {
 		display: block;
