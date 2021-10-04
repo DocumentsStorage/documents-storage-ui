@@ -15,9 +15,9 @@ Top Features
 #. Tagging system
 #. Manage accounts
 
-------------------------------------------------------------
-`Setup Guide <https://github.com/DocumentsStorage/documents-storage-api/>`_
-------------------------------------------------------------
+--------------------------------------------------------------------------------------------------------------------
+`How to install - Setup Guide <https://github.com/DocumentsStorage/documents-storage-api/blob/master/README.rst/>`_
+--------------------------------------------------------------------------------------------------------------------
 
 ===========
 Development
