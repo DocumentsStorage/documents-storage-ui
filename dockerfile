@@ -22,4 +22,4 @@ RUN npm run build
 ### Stage 2: delivery ###
 
 EXPOSE 5000
-CMD ["npm", "run start"]
+CMD ["npm", "start"]
