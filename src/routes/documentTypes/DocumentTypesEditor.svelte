@@ -44,6 +44,7 @@ import { FileMinus, Minus, Plus, X } from 'phosphor-svelte';
       allDocumentTypes = allDocumentTypes.filter(
         (documentType) => documentType._id.$oid !== currentDocumentType._id.$oid
       );
+      resetForm()
     } else if (response.status === 404) {
       notificationStore.set({
         message: 'Not found document type',
@@ -123,6 +124,7 @@ import { FileMinus, Minus, Plus, X } from 'phosphor-svelte';
         ...documentTypeData
       });
       allDocumentTypes = allDocumentTypes;
+      resetForm()
     } else if (response.status > 400 && response.status < 500) {
       notificationStore.set({
         message: 'Could not add document type.',
@@ -310,12 +312,6 @@ import { FileMinus, Minus, Plus, X } from 'phosphor-svelte';
         {/if}
       </div>
     </div>
-    <!-- {#if j === $form.fields.length - 1}
-      <span on:click={add}><Button>Add Field</Button></span>
-    {/if}
-    {#if $form.fields.length !== 1}
-      <span on:click={remove(j)}><Button>Remove field</Button></span>
-    {/if} -->
   {/each}
   <div class="col-span-3 flex justify-end mt-5">
     <div class="fixed bottom-4 mr-3">

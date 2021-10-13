@@ -71,6 +71,8 @@
         currentDocumentType = "";
         mediaFilesList = [];
         mediaThumbnailsList = [];
+        const title_element = document.getElementById('title')
+        title_element && title_element.focus()
     }
 
 

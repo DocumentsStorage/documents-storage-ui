@@ -26,6 +26,8 @@
 	export let isLogged = false;
 	export let rank = "";
 
+	$: checkRoute(window.location.pathname)
+
 	sessionInfo.subscribe((value) => {
 		isLogged = value.isLogged;
 		rank = value.rank;
@@ -113,12 +115,12 @@
 						>
 						<!-- Large -->
 						<div
+							id="settings_menu"
 							class="relative nav_mobile_btn md:mt-0 md:inline-block text-left"
 						>
 							<div>
 								<span
-									on:click={() =>
-										(showSettings = !showSettings)}
+									on:click={() =>(showSettings = !showSettings)}
 								>
 									<Button>Settings</Button>
 								</span>
