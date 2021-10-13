@@ -71,7 +71,7 @@ import { DownloadSimple, X } from 'phosphor-svelte';
                             }}
                             class="absolute top-0 right-0 p-2 cursor-pointer"
                         >
-                            <span class="text-xl rounded bg-gray-600 duration-100 hover:text-red-400 hover:bg-red-100"><X /></span>
+                            <X class="bg-gray-600 text-xl rounded duration-100 hover:text-red-400 hover:bg-red-100"/>
                         </div>
                         {#if mediaFilesList[i].file.length > 0}
                         <a
@@ -79,7 +79,7 @@ import { DownloadSimple, X } from 'phosphor-svelte';
                             href={mediaFilesList[i].file}
                             class="absolute visited:text-green-400 bottom-0 right-0 pr-2 cursor-pointer"
                         >
-                            <span class=" text-xl rounded bg-gray-600 duration-100 hover:text-green-400 hover:bg-green-100"><DownloadSimple /></span>
+                            <DownloadSimple class="text-xl rounded bg-gray-600 duration-100 hover:text-green-400 hover:bg-green-100"/>
                         </a>
                         {/if}
                     </div>
@@ -101,7 +101,7 @@ import { DownloadSimple, X } from 'phosphor-svelte';
             type="file"
             name="uploadedFile"
             id="uploadedFile"
-            accept="image/*,pdf"
+            accept="image/*, application/pdf"
             multiple
         />
     </div>

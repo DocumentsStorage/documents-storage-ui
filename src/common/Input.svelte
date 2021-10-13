@@ -15,4 +15,4 @@
     };
 </script>
 
-<input {name} {type} {placeholder} {value} class={classList}  on:input={handleInput} />
+<input {name} {type} {placeholder} {value} step="any" class={classList}  on:input={handleInput} />

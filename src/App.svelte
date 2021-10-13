@@ -6,7 +6,7 @@
 	import Button from "common/Button.svelte";
 	import ModLink from "common/ModLink.svelte";
 
-	import { X, List, Lifebuoy, SignOut } from "phosphor-svelte";
+	import { X, List, Lifebuoy, SignOut, User, Table } from "phosphor-svelte";
 
 	import Login from "./routes/Login.svelte";
 	import Account from "./routes/account/Account.svelte";
