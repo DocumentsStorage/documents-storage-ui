@@ -6,6 +6,8 @@
 	import Button from "common/Button.svelte";
 	import ModLink from "common/ModLink.svelte";
 
+	import { X, List, Lifebuoy, SignOut } from "phosphor-svelte";
+
 	import Login from "./routes/Login.svelte";
 	import Account from "./routes/account/Account.svelte";
 	import Documents from "./routes/documents/Documents.svelte";
@@ -70,7 +72,7 @@
 						fullScreenMenuOpen = true;
 					}}
 				>
-					<i class="ph-list" />
+					<List />
 				</p>
 
 				<!-- Routes -->
@@ -93,16 +95,26 @@
 							}}
 							class="flex justify-end text-2xl"
 						>
-							<i class="ph-x" />
+							<X />
 						</div>
 					{/if}
 					{#if !isLogged}
-						<Link to="/" class="nav_mobile_btn md:mt-0 md:inline-block"><Button>Login</Button></Link>
+						<Link
+							to="/"
+							class="nav_mobile_btn md:mt-0 md:inline-block"
+							><Button>Login</Button></Link
+						>
 					{/if}
 					{#if isLogged}
-						<Link to="/documents" class="nav_mobile_btn md:mt-0 md:inline-block"><Button>Documents</Button></Link>
+						<Link
+							to="/documents"
+							class="nav_mobile_btn md:mt-0 md:inline-block"
+							><Button>Documents</Button></Link
+						>
 						<!-- Large -->
-						<div class="relative nav_mobile_btn md:mt-0 md:inline-block text-left">
+						<div
+							class="relative nav_mobile_btn md:mt-0 md:inline-block text-left"
+						>
 							<div>
 								<span
 									on:click={() =>
@@ -128,9 +140,7 @@
 										>
 											<Link to="/account">
 												<ModLink>
-													<i
-														class="ph-user mr-2"
-													/>Account details
+													<User />Account details
 												</ModLink>
 											</Link>
 										</span>
@@ -143,9 +153,7 @@
 											>
 												<Link to="/manage">
 													<ModLink>
-														<i
-															class="ph-table mr-2"
-														/>Manage
+														<Table />Manage
 													</ModLink>
 												</Link>
 											</span>
@@ -159,9 +167,7 @@
 											<a
 												href="https://github.com/DocumentsStorage"
 												><ModLink
-													><i
-														class="ph-lifebuoy mr-2"
-													/>App support</ModLink
+													><Lifebuoy />App support</ModLink
 												></a
 											>
 										</span>
@@ -173,9 +179,7 @@
 												id="menu-item-3"
 												class="block my-2"
 												><ModLink
-													><i
-														class="ph-sign-out mr-2 ml-1"
-													/>Sign out</ModLink
+													><SignOut />Sign out</ModLink
 												></span
 											>
 										</div>
@@ -196,15 +200,13 @@
 									class="nav_mobile_btn"
 									href="https://github.com/DocumentsStorage"
 									><Button>
-										<i class="ph-lifebuoy mr-2" />App
-										support</Button
+										<Lifebuoy /> App support</Button
 									></a
 								>
-								<span class="nav_mobile_btn" on:click={() => logout()}
-									><Button
-										><i class="ph-sign-out mr-2 ml-1" />Sign
-										out</Button
-									></span
+								<span
+									class="nav_mobile_btn"
+									on:click={() => logout()}
+									><Button><SignOut /> Sign out</Button></span
 								>
 							</div>
 						{/if}
@@ -226,8 +228,6 @@
 </main>
 
 <style global lang="postcss">
-	@import url("/phosphor.css");
-
 	@font-face {
 		font-family: "Poppins";
 		src: url("/fonts/Poppins/Poppins-Regular.ttf");

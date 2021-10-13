@@ -3,6 +3,7 @@
     import { onMount } from "svelte";
     import notificationStore from "components/NotificationStore.js";
     import ActionsModal from "components/ActionsModal.svelte";
+    import { FileMinus, Plus } from "phosphor-svelte";
 
     export let allTags = null;
     export let tagToDelete = null;
@@ -146,7 +147,7 @@
                                         allTags = allTags;
                                     }
                                 }}
-                                ><i class="ph-file-minus mx-2" />
+                                ><span class="mx-2"><FileMinus /></span>
                                 {tag._id ? "Delete" : "Cancel"}</span
                             >
                         </div>
@@ -163,7 +164,7 @@
                 <span
                     on:click={startAddingTag}
                     class="bg-gray-600 active:border-green-500 hover:border-green-400 hover:bg-green-500 duration-100 rounded-full px-6 py-2 flex items-center border cursor-pointer"
-                    ><i class="ph-plus text-lg" /></span
+                    ><span class="text-lg"><Plus /></span></span
                 >
             {/if}
         {/if}

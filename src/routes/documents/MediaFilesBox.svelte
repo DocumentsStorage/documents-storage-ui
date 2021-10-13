@@ -1,4 +1,6 @@
 <script>
+import { DownloadSimple, X } from 'phosphor-svelte';
+
     import { createEventDispatcher } from 'svelte';
 
     export let mediaThumbnailsList;
@@ -69,7 +71,7 @@
                             }}
                             class="absolute top-0 right-0 p-2 cursor-pointer"
                         >
-                            <i class="ph-x text-xl rounded bg-gray-600 duration-100 hover:text-red-400 hover:bg-red-100" />
+                            <span class="text-xl rounded bg-gray-600 duration-100 hover:text-red-400 hover:bg-red-100"><X /></span>
                         </div>
                         {#if mediaFilesList[i].file.length > 0}
                         <a
@@ -77,7 +79,7 @@
                             href={mediaFilesList[i].file}
                             class="absolute visited:text-green-400 bottom-0 right-0 pr-2 cursor-pointer"
                         >
-                            <i class="ph-download-simple text-xl rounded bg-gray-600 duration-100 hover:text-green-400 hover:bg-green-100" />
+                            <span class=" text-xl rounded bg-gray-600 duration-100 hover:text-green-400 hover:bg-green-100"><DownloadSimple /></span>
                         </a>
                         {/if}
                     </div>

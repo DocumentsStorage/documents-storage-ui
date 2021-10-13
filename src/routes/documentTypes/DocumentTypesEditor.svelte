@@ -4,6 +4,7 @@
   import { SendHTTPrequest } from 'services/api.js';
   import notificationStore from 'components/NotificationStore.js';
   import ActionsModal from 'components/ActionsModal.svelte';
+import { FileMinus, Minus, Plus, X } from 'phosphor-svelte';
 
   export let allDocumentTypes;
   export let currentDocumentType = null;
@@ -189,12 +190,14 @@
       {/if}
     </h1>
     {#if currentDocumentType}
-      <i
+      <span
         on:click={() => {
           resetForm();
         }}
-        class="ph-x cursor-pointer"
-      />
+        class="cursor-pointer"
+      >
+        <X />
+    </span>
     {/if}
   </div>
   <!-- Inline -->
@@ -206,7 +209,7 @@
       }}
       >
       {#if currentDocumentType}
-      <i class="ph-file-minus mx-2" />
+      <span class="mx-2"><FileMinus /></span>
       Delete Type
       {/if}
       </span
@@ -290,7 +293,7 @@
             <span
               on:click={removeField(j)}
               class="bg-gray-600 active:border-yello-500 hover:border-yellow-400 hover:bg-yellow-500 duration-100 rounded-full px-3 sm:px-4 py-1 flex items-center border cursor-pointer"
-              ><i class="ph-minus text-lg" /></span
+              ><Minus /></span
             >
           {/if}
         </div>
@@ -302,7 +305,7 @@
           <span
             on:click={addField}
             class="bg-gray-600 active:border-green-500 hover:border-green-400 hover:bg-green-500 duration-100 rounded-full px-6 py-2 flex items-center border cursor-pointer"
-            ><i class="ph-plus text-lg" /></span
+            ><Plus /></span
           >
         {/if}
       </div>
