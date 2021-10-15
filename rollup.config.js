@@ -44,7 +44,8 @@ export default {
 	},
 	plugins: [
 		replace({
-            API_URL: JSON.stringify(process.env.API_URL)
+            API_URL: JSON.stringify(process.env.API_URL),
+			APP_VERSION: JSON.stringify(process.env.npm_package_version)
         }),
 		svelte({
 			preprocess: sveltePreprocess({

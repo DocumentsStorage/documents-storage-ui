@@ -8,5 +8,6 @@
   <div>
     <AccountData />
     <AccountPassword />
+    App version: {APP_VERSION}
   </div>
 </div>
