@@ -4,6 +4,7 @@
   import { SendHTTPrequest } from 'services/api.js';
   import notificationStore from 'components/NotificationStore.js';
   import ActionsModal from 'components/ActionsModal.svelte';
+import { FileMinus, Minus, Plus, X } from 'phosphor-svelte';
 
   export let allDocumentTypes;
   export let currentDocumentType = null;
@@ -43,6 +44,7 @@
       allDocumentTypes = allDocumentTypes.filter(
         (documentType) => documentType._id.$oid !== currentDocumentType._id.$oid
       );
+      resetForm()
     } else if (response.status === 404) {
       notificationStore.set({
         message: 'Not found document type',
@@ -122,6 +124,7 @@
         ...documentTypeData
       });
       allDocumentTypes = allDocumentTypes;
+      resetForm()
     } else if (response.status > 400 && response.status < 500) {
       notificationStore.set({
         message: 'Could not add document type.',
@@ -189,12 +192,14 @@
       {/if}
     </h1>
     {#if currentDocumentType}
-      <i
+      <span
         on:click={() => {
           resetForm();
         }}
-        class="ph-x cursor-pointer"
-      />
+        class="cursor-pointer"
+      >
+        <X />
+    </span>
     {/if}
   </div>
   <!-- Inline -->
@@ -206,7 +211,7 @@
       }}
       >
       {#if currentDocumentType}
-      <i class="ph-file-minus mx-2" />
+      <span class="mx-2"><FileMinus /></span>
       Delete Type
       {/if}
       </span
@@ -290,7 +295,7 @@
             <span
               on:click={removeField(j)}
               class="bg-gray-600 active:border-yello-500 hover:border-yellow-400 hover:bg-yellow-500 duration-100 rounded-full px-3 sm:px-4 py-1 flex items-center border cursor-pointer"
-              ><i class="ph-minus text-lg" /></span
+              ><Minus /></span
             >
           {/if}
         </div>
@@ -302,17 +307,11 @@
           <span
             on:click={addField}
             class="bg-gray-600 active:border-green-500 hover:border-green-400 hover:bg-green-500 duration-100 rounded-full px-6 py-2 flex items-center border cursor-pointer"
-            ><i class="ph-plus text-lg" /></span
+            ><Plus /></span
           >
         {/if}
       </div>
     </div>
-    <!-- {#if j === $form.fields.length - 1}
-      <span on:click={add}><Button>Add Field</Button></span>
-    {/if}
-    {#if $form.fields.length !== 1}
-      <span on:click={remove(j)}><Button>Remove field</Button></span>
-    {/if} -->
   {/each}
   <div class="col-span-3 flex justify-end mt-5">
     <div class="fixed bottom-4 mr-3">

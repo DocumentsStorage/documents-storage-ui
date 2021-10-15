@@ -2,6 +2,7 @@
     import { SendHTTPrequest } from "services/api.js";
     import { onMount } from "svelte";
     import Button from "common/Button.svelte";
+import { CaretLeft, CaretRight, MagnifyingGlass, X } from "phosphor-svelte";
 
     export let allDocuments;
     export let totalDocumentsCount = 0;
@@ -147,7 +148,9 @@
                     <Button
                         class="dark:bg-gray-900 rounded font-bold border-gray-600 px-2 py-3 mx-2 flex justify-center items-center text-lg"
                     >
-                        <i class="{searching ? 'visible' : 'invisible'} ph-x" />
+                        <span class="{searching ? 'visible' : 'invisible'}">
+                            <X />
+                        </span>
                     </Button>
                 </span>
                 <input
@@ -162,7 +165,7 @@
                     <Button
                         class="dark:bg-gray-900 rounded font-bold border-gray-600 px-2 py-3 mx-2 flex justify-center items-center text-lg"
                     >
-                        <i class="ph-magnifying-glass" />
+                        <MagnifyingGlass />
                     </Button>
                 </span>
             </form>
@@ -198,16 +201,16 @@
                             totalDocumentsCount / perPage
                         )}
                     </small>
-                    <div>
+                    <div class="flex">
                         <span
                             class="rounded mx-1 px-4 py-2 bg-gray-900"
                             on:click={prevPage}
-                            ><i class="ph-caret-left" /></span
+                            ><CaretLeft /></span
                         >
                         <span
                             class="rounded mx-1 px-4 py-2 bg-gray-900"
                             on:click={nextPage}
-                            ><i class="ph-caret-right" /></span
+                            ><CaretRight /></span
                         >
                     </div>
                 </div>

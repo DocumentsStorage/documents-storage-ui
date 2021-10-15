@@ -1,4 +1,5 @@
 <script>
+    import { FileMinus, Minus, Plus, X } from "phosphor-svelte";
     import { createForm } from "svelte-forms-lib";
     import * as yup from "yup";
     import { SendHTTPrequest } from "services/api.js";
@@ -70,6 +71,8 @@
         currentDocumentType = "";
         mediaFilesList = [];
         mediaThumbnailsList = [];
+        const title_element = document.getElementById('title')
+        title_element && title_element.focus()
     }
 
 
@@ -495,13 +498,12 @@
             </p>
             <span class="cursor-pointer">
                 {#if currentDocument}
-                    <i
-                        on:click={() => {
-                            currentDocument = null;
-                            resetForm();
-                        }}
-                        class="ph-x"
-                    />
+                    <span on:click={() => {
+                        currentDocument = null;
+                        resetForm();
+                    }}>
+                        <X />
+                    </span>
                 {/if}
             </span>
         </div>
@@ -520,7 +522,7 @@
             }}
         >
             {#if currentDocument}
-                <i class="ph-file-minus mx-2" />
+                <FileMinus />
                 Delete Document
             {/if}
         </span>
@@ -547,7 +549,7 @@
                         <span
                             on:click={removeTag(j)}
                             class="pr-2 py-1 flex items-center cursor-pointer"
-                            ><i class="ph-x" />
+                            ><X />
                         </span>
                     </span>
             {/each}
@@ -630,7 +632,7 @@
                         <span
                             on:click={removeField(j)}
                             class="bg-gray-600 active:border-yello-500 hover:border-yellow-400 hover:bg-yellow-500 duration-100 rounded-full px-3 sm:px-4 py-1 flex items-center border cursor-pointer"
-                            ><i class="ph-minus text-lg" /></span
+                            ><Minus /></span
                         >
                     {/if}
                 </div>
@@ -642,7 +644,7 @@
                     <span
                         on:click={addField}
                         class="bg-gray-600 active:border-green-500 hover:border-green-400 hover:bg-green-500 duration-100 rounded-full px-6 py-2 flex items-center border cursor-pointer"
-                        ><i class="ph-plus text-lg" /></span
+                        ><Plus /></span
                     >
                 {/if}
             </div>

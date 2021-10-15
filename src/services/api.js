@@ -112,6 +112,9 @@ const fetchMethod = async (url, initialFetchConfig, timeout = 5000, debug = fals
           message: 'Could not connect to remote server, try again',
           type: 'ERROR'
         });
+      } 
+      else if (responseObject.status === 401) {
+        window.location.pathname = "/documents"
       }
       return responseObject;
     } catch (error) {

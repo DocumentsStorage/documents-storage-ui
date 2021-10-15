@@ -1,11 +1,12 @@
 <script>
+    import { X } from "phosphor-svelte";
+    import { createEventDispatcher } from 'svelte';
+
     export let show;
     export let message;
     export let title;
     export let cancelAction;
     export let proceedAction;
-
-    import { createEventDispatcher } from 'svelte';
 
     const dispatch = createEventDispatcher();
 
@@ -51,7 +52,7 @@
         <div class="dark:bg-gray-800 dark:text-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
           <div class="sm:flex sm:items-start">
             <div class="mx-auto flex-shrink-0 flex items-center justify-center h-12 w-12 rounded-full bg-red-100 sm:mx-0 sm:h-10 sm:w-10">
-              <span class="text-red-700 text-2xl mt-1"><i class="ph-warning"></i></span>
+              <span class="text-red-700 text-2xl mt-1"><X /></span>
             </div>
             <div class="mt-3 text-center sm:mt-0 sm:ml-4 sm:text-left">
               <h3 class="text-lg leading-6 font-medium dark:text-white" id="modal-title">
