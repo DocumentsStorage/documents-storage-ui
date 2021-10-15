@@ -19,6 +19,7 @@
 
 	import { checkRoute, sessionInfo } from "services/route-guard.js";
 	import { onMount } from "svelte";
+	import { SendHTTPrequest } from "services/api.js";
 
 	export let fullScreenMenuOpen = false;
 	export let url = "";
@@ -40,12 +41,38 @@
 		navigate("/", { replace: true });
 	}
 
+	async function updateToken(){
+	  console
+      const response = await SendHTTPrequest({
+        endpoint: '/token/update',
+        method: 'POST'
+      });
+      if (response.status === 200) {
+        const cookies = new Cookies();
+        cookies.set('authToken', response.data.access_token, {
+          sameSite: 'strict'
+        });
+        const currentSessionInfo = jwt_decode(response.data.access_token);
+        if (currentSessionInfo) {
+          sessionInfo.set({isLogged: true, ...currentSessionInfo});
+        }
+      } else if (response.status > 400 && response.status < 500) {
+        notificationStore.set({
+          message: 'Could not update token',
+          type: 'ERROR'
+        });
+      }
+    }
+
 	// Routing guards
 	onMount(() => {
 		const cookies = new Cookies();
 		try {
 			const currentSessionInfo = jwt_decode(cookies.get("authToken"));
 			if (currentSessionInfo.exp > Date.now() / 1000) {
+				if(currentSessionInfo.exp - Date.now() / 1000 < 60*30){
+					updateToken();
+				}
 				sessionInfo.set({ isLogged: true, ...currentSessionInfo });
 			} else {
 				cookies.remove("authToken");
