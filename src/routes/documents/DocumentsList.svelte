@@ -2,7 +2,7 @@
     import { SendHTTPrequest } from "services/api.js";
     import { onMount } from "svelte";
     import Button from "common/Button.svelte";
-import { CaretLeft, CaretRight, MagnifyingGlass, X } from "phosphor-svelte";
+    import { CaretLeft, CaretRight, MagnifyingGlass, X } from "phosphor-svelte";
 
     export let allDocuments;
     export let totalDocumentsCount = 0;
