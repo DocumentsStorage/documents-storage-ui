@@ -72,7 +72,14 @@
         mediaFilesList = [];
         mediaThumbnailsList = [];
         const title_element = document.getElementById('title')
-        title_element && title_element.focus()
+        if(title_element){
+            title_element.focus();
+            window.scrollTo({
+                left: title_element.getBoundingClientRect().left + window.scrollX,
+                top: title_element.getBoundingClientRect().top + window.scrollY,
+                behavior: "smooth"
+            });
+        }
     }
 
 
