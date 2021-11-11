@@ -21,7 +21,7 @@
     <h2>Accounts</h2>
     <ul class="mt-5">
         {#each allAccounts as account}
-            <li class="dark:bg-gray-600 rounded mt-5 p-2 flex items-center">
+            <li class="bg-gray-200 dark:bg-gray-600 rounded mt-5 p-2 flex items-center">
                 <!-- Stacked -->
                 <div class="w-24 ml-2">
                     <p>{account.username}</p>

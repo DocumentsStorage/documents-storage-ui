@@ -171,7 +171,7 @@ import { CaretLeft, CaretRight, MagnifyingGlass, X } from "phosphor-svelte";
             </form>
             {#if allDocuments.length > 0}
                 {#each allDocuments as documentType}
-                    <li class="dark:bg-gray-600 rounded mt-5 p-2 flex">
+                    <li class="bg-gray-200 dark:bg-gray-600 rounded mt-5 p-2 flex">
                         <!-- Stacked -->
                         <div class="w-3/4 ml-2">
                             <p>{documentType.title}</p>
@@ -203,12 +203,12 @@ import { CaretLeft, CaretRight, MagnifyingGlass, X } from "phosphor-svelte";
                     </small>
                     <div class="flex">
                         <span
-                            class="rounded mx-1 px-4 py-2 bg-gray-900"
+                            class="rounded mx-1 px-4 py-2 bg-gray-200 dark:bg-gray-900"
                             on:click={prevPage}
                             ><CaretLeft /></span
                         >
                         <span
-                            class="rounded mx-1 px-4 py-2 bg-gray-900"
+                            class="rounded mx-1 px-4 py-2 bg-gray-200 dark:bg-gray-900"
                             on:click={nextPage}
                             ><CaretRight /></span
                         >

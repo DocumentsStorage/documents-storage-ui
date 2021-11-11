@@ -548,7 +548,7 @@
     <div class="col-span-3 flex flex-wrap">
         {#if $form.tags.length > 0}
             {#each $form.tags as tagId, j}
-                    <span class="flex bg-gray-500 rounded-full mx-2 my-1">
+                    <span class="flex bg-gray-100 dark:bg-gray-500 rounded-full mx-2 my-1">
                         <p class="px-2 rounded-full">
                             {allTags.find((tag) => tag._id["$oid"] === tagId)
                                 .name}
@@ -638,7 +638,7 @@
                     {#if $form.fields.length !== 1}
                         <span
                             on:click={removeField(j)}
-                            class="bg-gray-600 active:border-yello-500 hover:border-yellow-400 hover:bg-yellow-500 duration-100 rounded-full px-3 sm:px-4 py-1 flex items-center border cursor-pointer"
+                            class="bg-gray-200 dark:bg-gray-600 active:border-yello-500 hover:border-yellow-400 hover:bg-yellow-500 duration-100 rounded-full px-3 sm:px-4 py-1 flex items-center border cursor-pointer"
                             ><Minus /></span
                         >
                     {/if}
@@ -650,7 +650,7 @@
                 {#if j === $form.fields.length - 1}
                     <span
                         on:click={addField}
-                        class="bg-gray-600 active:border-green-500 hover:border-green-400 hover:bg-green-500 duration-100 rounded-full px-6 py-2 flex items-center border cursor-pointer"
+                        class="bg-gray-200 dark:bg-gray-600 active:border-green-500 hover:border-green-400 hover:bg-green-500 duration-100 rounded-full px-6 py-2 flex items-center border cursor-pointer"
                         ><Plus /></span
                     >
                 {/if}
