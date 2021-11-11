@@ -93,7 +93,7 @@ import { DownloadSimple, X } from 'phosphor-svelte';
             </div>
         {/if}
     </div>
-    <div class="flex justify-center rounded dark:bg-gray-800 mt-2 py-1">
+    <div class="flex justify-center rounded bg-gray-300 dark:bg-gray-800 mt-2 py-1">
         <div class="absolute">Click here to add</div>
         <input
             on:change={mediaInputHandler}

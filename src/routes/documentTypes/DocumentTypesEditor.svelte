@@ -294,7 +294,7 @@ import { FileMinus, Minus, Plus, X } from 'phosphor-svelte';
           {#if $form.fields.length !== 1}
             <span
               on:click={removeField(j)}
-              class="bg-gray-600 active:border-yello-500 hover:border-yellow-400 hover:bg-yellow-500 duration-100 rounded-full px-3 sm:px-4 py-1 flex items-center border cursor-pointer"
+              class="bg-gray-200 dark:bg-gray-600 active:border-yello-500 hover:border-yellow-400 hover:bg-yellow-500 duration-100 rounded-full px-3 sm:px-4 py-1 flex items-center border cursor-pointer"
               ><Minus /></span
             >
           {/if}
@@ -306,7 +306,7 @@ import { FileMinus, Minus, Plus, X } from 'phosphor-svelte';
         {#if j === $form.fields.length - 1}
           <span
             on:click={addField}
-            class="bg-gray-600 active:border-green-500 hover:border-green-400 hover:bg-green-500 duration-100 rounded-full px-6 py-2 flex items-center border cursor-pointer"
+            class="bg-gray-200 dark:bg-gray-600 active:border-green-500 hover:border-green-400 hover:bg-green-500 duration-100 rounded-full px-6 py-2 flex items-center border cursor-pointer"
             ><Plus /></span
           >
         {/if}
@@ -317,7 +317,7 @@ import { FileMinus, Minus, Plus, X } from 'phosphor-svelte';
     <div class="fixed bottom-4 mr-3">
       <input
         type="submit"
-        class="dark:bg-gray-800 dark:active:bg-gray-900 dark:text-white hover:text-green-400 duration-200 rounded-lg shadow-md py-2 px-10 cursor-pointer"
+        class="bg-gray-200 active:bg-gray-500 dark:bg-gray-600 dark:active:bg-gray-900 dark:text-white hover:text-green-400 duration-200 rounded-lg shadow-md py-2 px-10 cursor-pointer"
         value={currentDocumentType ? 'Update Type' : 'Add Type'}
       />
     </div>

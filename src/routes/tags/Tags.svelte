@@ -163,7 +163,7 @@
             {#if allTags[allTags.length - 1]?._id || allTags.length == 0}
                 <span
                     on:click={startAddingTag}
-                    class="bg-gray-600 active:border-green-500 hover:border-green-400 hover:bg-green-500 duration-100 rounded-full px-6 py-2 flex items-center border cursor-pointer"
+                    class="bg-gray-200 dark:bg-gray-600 active:border-green-500 hover:border-green-400 hover:bg-green-500 duration-100 rounded-full px-6 py-2 flex items-center border cursor-pointer"
                     ><span class="text-lg"><Plus /></span></span
                 >
             {/if}

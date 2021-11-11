@@ -9,12 +9,14 @@
     import generatePdfThumbnails from "pdf-thumbnails-generator";
     import { onMount } from "svelte";
     import ActionsModal from "components/ActionsModal.svelte";
+    import Button from "common/Button.svelte";
 
     export let allDocuments;
     export let documentTypesList = [];
     export let allTags = [];
     export let currentDocumentType = "";
     export let currentDocument = null;
+    export let editTitle = false;
 
     export let mediaThumbnailsList = [];
     export let mediaFilesList = [];
@@ -49,6 +51,13 @@
         $form.fields[e.detail.index].value = e.detail.value;
     }
 
+    function toggleEditTitle(){
+        if (editTitle) {
+            $form.title = ""
+        }
+        editTitle = !editTitle
+    }
+
     function resetForm() {
         $form.title = "";
         $form.description = "";
@@ -60,7 +69,7 @@
                 valueType: "text",
             },
         ];
-
+        
         $errors.title = "";
         $errors.description = "";
         $errors.fields = [{}];
@@ -71,8 +80,15 @@
         currentDocumentType = "";
         mediaFilesList = [];
         mediaThumbnailsList = [];
-        const title_element = document.getElementById('title')
-        title_element && title_element.focus()
+        const top_of_document = document.getElementById('top_of_document')
+        if(top_of_document){
+            top_of_document.focus();
+            window.scrollTo({
+                left: top_of_document.getBoundingClientRect().left + window.scrollX,
+                top: top_of_document.getBoundingClientRect().top + window.scrollY,
+                behavior: "smooth"
+            });
+        }
     }
 
 
@@ -285,6 +301,8 @@
                 return field;
             });
             data.tags = data.tags.map((id)=> {return {"$oid": id}})
+            data.title = response.data.title;
+            $form.title = data.title;
             allDocuments[index] = data;
             allDocuments = allDocuments;
         } else if (response.status > 400 && response.status < 500) {
@@ -330,6 +348,7 @@
             
             allDocuments.push({
                 _id: { $oid: response.data.id.$oid },
+                title: response.data.title,
                 ...data
             });
             allDocuments = allDocuments;
@@ -426,7 +445,7 @@
             ],
         },
         validationSchema: yup.object().shape({
-            title: yup.string().min(1).required("Title field is required"),
+            title: yup.string().nullable(),
             description: yup.string().nullable(),
             fields: yup.array().of(
                 yup.object().shape({
@@ -477,7 +496,8 @@
     on:submit={handleDocumentSubmit}
     class="grid gap-5 grid-cols-3 my-5 relative"
 >
-    <div class="w-full col-span-3 flex items-center justify-between">
+    <div class="w-full col-span-3 flex items-center justify-between" id="top_of_document">
+        {#if currentDocument || editTitle}
         <div>
             <input
                 id="title"
@@ -488,12 +508,22 @@
                 bind:value={$form.title}
             />
         </div>
+        {/if}
         <div class="w-full flex justify-between text-left pl-4">
             <p class="dark:text-gray-500">
                 {#if currentDocument}
                     Updating Document
                 {:else}
                     New Document, unsaved
+                    <span on:click={()=>{toggleEditTitle()}}>
+                        <Button>
+                            {#if !editTitle}
+                                Add custom title
+                            {:else}
+                                Remove custom title
+                            {/if}
+                        </Button>
+                    </span>
                 {/if}
             </p>
             <span class="cursor-pointer">
@@ -541,7 +571,7 @@
     <div class="col-span-3 flex flex-wrap">
         {#if $form.tags.length > 0}
             {#each $form.tags as tagId, j}
-                    <span class="flex bg-gray-500 rounded-full mx-2 my-1">
+                    <span class="flex bg-gray-100 dark:bg-gray-500 rounded-full mx-2 my-1">
                         <p class="px-2 rounded-full">
                             {allTags.find((tag) => tag._id["$oid"] === tagId)
                                 .name}
@@ -631,7 +661,7 @@
                     {#if $form.fields.length !== 1}
                         <span
                             on:click={removeField(j)}
-                            class="bg-gray-600 active:border-yello-500 hover:border-yellow-400 hover:bg-yellow-500 duration-100 rounded-full px-3 sm:px-4 py-1 flex items-center border cursor-pointer"
+                            class="bg-gray-200 dark:bg-gray-600 active:border-yello-500 hover:border-yellow-400 hover:bg-yellow-500 duration-100 rounded-full px-3 sm:px-4 py-1 flex items-center border cursor-pointer"
                             ><Minus /></span
                         >
                     {/if}
@@ -643,7 +673,7 @@
                 {#if j === $form.fields.length - 1}
                     <span
                         on:click={addField}
-                        class="bg-gray-600 active:border-green-500 hover:border-green-400 hover:bg-green-500 duration-100 rounded-full px-6 py-2 flex items-center border cursor-pointer"
+                        class="bg-gray-200 dark:bg-gray-600 active:border-green-500 hover:border-green-400 hover:bg-green-500 duration-100 rounded-full px-6 py-2 flex items-center border cursor-pointer"
                         ><Plus /></span
                     >
                 {/if}

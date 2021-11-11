@@ -23,7 +23,7 @@
             {#if allDocumentTypes.length > 0}
                 {#each allDocumentTypes as documentType}
                     <li
-                        class="dark:bg-gray-600 rounded mt-5 p-2 flex items-center"
+                        class="bg-gray-200 dark:bg-gray-600 rounded mt-5 p-2 flex items-center"
                     >
                         <!-- Stacked -->
                         <div class="w-2/3 ml-2">
