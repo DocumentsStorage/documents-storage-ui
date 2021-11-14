@@ -1,7 +1,7 @@
 ### Stage 1: build ###
 FROM node:14.16.0-alpine as builder
 MAINTAINER Daniel Goliszewski "taafeenn@gmail.com"
-LABEL version="0.8.0"
+LABEL version="0.8.2"
 
 # Set working directory.
 RUN mkdir /documents-storage-ui
