@@ -510,13 +510,13 @@
         </div>
         {/if}
         <div class="w-full flex justify-between text-left pl-4">
-            <p class="dark:text-gray-500">
+            <p class="dark:text-gray-500 text-center">
                 {#if currentDocument}
                     Updating Document
                 {:else}
                     New Document, unsaved
                     <span on:click={()=>{toggleEditTitle()}}>
-                        <Button>
+                        <Button classList="mx-5" size="sm">
                             {#if !editTitle}
                                 Add custom title
                             {:else}

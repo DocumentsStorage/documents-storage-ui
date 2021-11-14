@@ -2,8 +2,9 @@
     import { SendHTTPrequest } from "services/api.js";
     import { onMount } from "svelte";
     import Button from "common/Button.svelte";
-    import { CaretLeft, CaretRight, MagnifyingGlass, X } from "phosphor-svelte";
+    import { CaretLeft, CaretRight, MagnifyingGlass, X, SortAscending, SortDescending } from "phosphor-svelte";
 
+    export let allDefinedFields;
     export let allDocuments;
     export let totalDocumentsCount = 0;
     export let perPage = 7;
@@ -11,20 +12,45 @@
     export let currentDocument;
     export let search_text = "";
     export let searching = false;
-
-    function setupDocuments(documents) {
+    export let order_ascending = true;
+    export let order_by = "creation_date";
+    
+    $: order_by, order_ascending, loadSortedDocuments();
+    
+    function setupDocuments(loaded) {
+        var documents = loaded.documents;
         documents = documents.map((document) => {
             document.media_files = document.media_files?.map(
                 (uuid) => uuid["$uuid"]
             );
             return document;
         });
+        allDefinedFields = loaded.defined_fields;
         allDocuments = documents;
     }
 
-    async function loadListDocuments(skip, limit) {
+    function getOrderBy(){
+        return `&order_by=${order_by}&order=${order_ascending ? '+1' : '-1'}`
+    }
+
+    async function loadSortedDocuments(skip=0, limit=perPage){
+        const query = getOrderBy()
+        if(searching){
+            const loaded = await loadSearchDocuments(skip, limit, query);
+            totalDocumentsCount = loaded.total;
+            currentPage = 0;
+            setupDocuments(loaded);
+        } else {
+            const loaded = await loadListDocuments(skip, limit, query);
+            totalDocumentsCount = loaded.total;
+            currentPage = 0;
+            setupDocuments(loaded);
+        }
+    }
+
+    async function loadListDocuments(skip, limit, order=getOrderBy()) {
         const response = await SendHTTPrequest({
-            endpoint: `/documents?skip=${skip}&limit=${limit}`,
+            endpoint: `/documents?skip=${skip}&limit=${limit + order}`,
             method: "GET",
             headers: {
                 "Content-Type": "application/json",
@@ -37,14 +63,14 @@
         }
     }
 
-    async function loadSearchDocuments(skip, limit) {
+    async function loadSearchDocuments(skip, limit, order=getOrderBy()) {
         let query = "";
         for (const word of search_text.split(" ")) {
             query += `&search_text=${word}`;
         }
 
         const response = await SendHTTPrequest({
-            endpoint: `/documents/search?skip=${skip}&limit=${limit}${query}`,
+            endpoint: `/documents?skip=${skip}&limit=${limit + query + order}`,
             method: "GET",
             headers: {
                 "Content-Type": "application/json",
@@ -63,7 +89,7 @@
         const loaded = await loadListDocuments(0, perPage);
         if (loaded) {
             totalDocumentsCount = loaded.total;
-            setupDocuments(loaded.documents);
+            setupDocuments(loaded);
         }
     }
 
@@ -73,7 +99,7 @@
             const loaded = await loadSearchDocuments(0, perPage);
             if (loaded) {
                 totalDocumentsCount = loaded.total;
-                setupDocuments(loaded.documents);
+                setupDocuments(loaded);
             }
         }
     }
@@ -95,7 +121,7 @@
             if (loaded) {
                 if(loaded.documents.length > 0){
                     totalDocumentsCount = loaded.total;
-                    setupDocuments(loaded.documents);
+                    setupDocuments(loaded);
                     currentPage--;
                 }
             }
@@ -119,7 +145,7 @@
             if (loaded) {
                 if(loaded.documents.length > 0){
                     totalDocumentsCount = loaded.total;
-                    setupDocuments(loaded.documents);
+                    setupDocuments(loaded);
                     currentPage++;
                 }
             }
@@ -130,7 +156,7 @@
         const loaded = await loadListDocuments(0, perPage);
         if (loaded) {
             totalDocumentsCount = loaded.total;
-            setupDocuments(loaded.documents);
+            setupDocuments(loaded);
         }
     });
 </script>
@@ -140,13 +166,14 @@
         {#if allDocuments}
             <form on:submit={(e)=> {e.preventDefault(); startSearchingDocuments()}} class="my-1 flex">
                 <span
-                    class="
-                        {searching ? 'visible px-2' : 'invisible w-1'} flex justify-center items-center w-1/6"
+                    class="flex justify-center items-center
+                        {searching ? 'visible px-2 w-1/6' : 'invisible w-0'} transition-all"
 
                     on:click={resetSearchingDocuments}
                 >
                     <Button
-                        class="dark:bg-gray-900 rounded font-bold border-gray-600 px-2 py-3 mx-2 flex justify-center items-center text-lg"
+                        class="
+                        {searching ? 'visible px-2' : 'invisible w-0'} dark:bg-gray-900 border-gray-600 font-bold px-2 py-3 mx-2 flex justify-center items-center text-lg"
                     >
                         <span class="{searching ? 'visible' : 'invisible'}">
                             <X />
@@ -169,9 +196,39 @@
                     </Button>
                 </span>
             </form>
+            <div class="flex mt-5">
+                <div class="w-1/2">
+                    <Button classList="w-44" on:click={(e)=>{ order_ascending = !order_ascending;}}>
+                            {#if order_ascending}
+                            <div class="flex justify-between items-center text-lg w-full">
+                                <p>Sorted Ascending</p>
+                                <SortAscending />
+                            </div>
+                            {:else}
+                            <div class="flex justify-between items-center text-lg w-full">
+                                <p>Sorted Descending</p>
+                                <SortDescending />
+                            </div>
+                            {/if}
+                    </Button>
+                </div>
+                <div class="w-1/2 flex justify-center">
+                    <select
+                        name="documentType"
+                        class="dark:bg-gray-900 font-bold px-2 py-1 col-span-3"
+                        bind:value={order_by}
+                    >
+                        <option value="creation_date" selected>Creation date</option>
+                        <option value="modification_date">Modification date</option>
+                        {#each allDefinedFields as field}
+                            <option value={field}>{field}</option>
+                        {/each}
+                    </select>
+                </div>
+            </div>
             {#if allDocuments.length > 0}
                 {#each allDocuments as documentType}
-                    <li class="bg-gray-200 dark:bg-gray-600 rounded mt-5 p-2 flex">
+                    <li class="flex h-16 bg-gray-200 dark:bg-gray-600 rounded mt-5 p-2">
                         <!-- Stacked -->
                         <div class="w-3/4 ml-2">
                             <p>{documentType.title}</p>
@@ -184,7 +241,7 @@
                         </div>
                         <div class="w-full mr-5 flex justify-end">
                             <span
-                                class="flex items-center pl-5 dark:text-white text-black"
+                                class="flex items-center pl-5 dark:text-white text-black cursor-pointer"
                                 on:click={() => {
                                     // eslint-disable-next-line @typescript-eslint/no-unused-vars
                                     currentDocument = documentType;
@@ -202,16 +259,14 @@
                         )}
                     </small>
                     <div class="flex">
-                        <span
-                            class="rounded mx-1 px-4 py-2 bg-gray-200 dark:bg-gray-900"
+                        <Button
+                            classList="rounded mx-1 px-4 py-2 bg-gray-200 dark:bg-gray-900"
                             on:click={prevPage}
-                            ><CaretLeft /></span
-                        >
-                        <span
-                            class="rounded mx-1 px-4 py-2 bg-gray-200 dark:bg-gray-900"
+                            ><CaretLeft /></Button>
+                        <Button
+                            classList="rounded mx-1 px-4 py-2 bg-gray-200 dark:bg-gray-900"
                             on:click={nextPage}
-                            ><CaretRight /></span
-                        >
+                            ><CaretRight /></Button>
                     </div>
                 </div>
             {:else}
@@ -223,9 +278,4 @@
     </ul>
 </div>
 
-<style>
-    span {
-        cursor: pointer;
-        transition-duration: 0.2s;
-    }
-</style>
+
