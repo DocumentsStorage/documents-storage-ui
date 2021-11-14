@@ -197,25 +197,25 @@
                 </span>
             </form>
             <div class="flex mt-5">
-                <div class="w-1/2">
-                    <Button classList="w-44" on:click={(e)=>{ order_ascending = !order_ascending;}}>
+                <div class="w-3/5 text-sm">
+                    <Button classList="w-2/3" size="sm" on:click={(e)=>{ order_ascending = !order_ascending;}}>
                             {#if order_ascending}
-                            <div class="flex justify-between items-center text-lg w-full">
+                            <div class="flex justify-between items-center w-full">
                                 <p>Sorted Ascending</p>
                                 <SortAscending />
                             </div>
                             {:else}
-                            <div class="flex justify-between items-center text-lg w-full">
+                            <div class="flex justify-between items-center w-full">
                                 <p>Sorted Descending</p>
                                 <SortDescending />
                             </div>
                             {/if}
                     </Button>
                 </div>
-                <div class="w-1/2 flex justify-center">
+                <div class="w-2/5 flex justify-end text-sm">
                     <select
                         name="documentType"
-                        class="dark:bg-gray-900 font-bold px-2 py-1 col-span-3"
+                        class="dark:bg-gray-900 w-full font-bold py-1"
                         bind:value={order_by}
                     >
                         <option value="creation_date" selected>Creation date</option>
@@ -230,16 +230,19 @@
                 {#each allDocuments as documentType}
                     <li class="flex h-16 bg-gray-200 dark:bg-gray-600 rounded mt-5 p-2">
                         <!-- Stacked -->
-                        <div class="w-3/4 ml-2">
-                            <p>{documentType.title}</p>
+                        <div class="w-full ml-2">
+                            <p>{documentType.title.length > 20
+                                ? documentType.title.slice(0, 20) +
+                                  "..."
+                                : documentType.title}</p>
                             <small
-                                >{documentType.description.length > 30
-                                    ? documentType.description.slice(0, 30) +
+                                >{documentType.description.length > 25
+                                    ? documentType.description.slice(0, 25) +
                                       "..."
                                     : documentType.description}</small
                             >
                         </div>
-                        <div class="w-full mr-5 flex justify-end">
+                        <div class="mr-5 flex justify-end">
                             <span
                                 class="flex items-center pl-5 dark:text-white text-black cursor-pointer"
                                 on:click={() => {
