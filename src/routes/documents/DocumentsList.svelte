@@ -4,8 +4,8 @@
     import Button from "common/Button.svelte";
     import { CaretLeft, CaretRight, MagnifyingGlass, X, SortAscending, SortDescending } from "phosphor-svelte";
 
-    export let allDefinedFields;
-    export let allDocuments;
+    export let allDefinedFields = [];
+    export let allDocuments = [];
     export let totalDocumentsCount = 0;
     export let perPage = 7;
     export let currentPage = 0;
@@ -37,14 +37,18 @@
         const query = getOrderBy()
         if(searching){
             const loaded = await loadSearchDocuments(skip, limit, query);
-            totalDocumentsCount = loaded.total;
-            currentPage = 0;
-            setupDocuments(loaded);
+            if(loaded){
+                totalDocumentsCount = loaded.total;
+                currentPage = 0;
+                setupDocuments(loaded);
+            }
         } else {
             const loaded = await loadListDocuments(skip, limit, query);
-            totalDocumentsCount = loaded.total;
-            currentPage = 0;
-            setupDocuments(loaded);
+            if(loaded){
+                totalDocumentsCount = loaded.total;
+                currentPage = 0;
+                setupDocuments(loaded);
+            }
         }
     }
 
@@ -220,9 +224,11 @@
                     >
                         <option value="creation_date" selected>Creation date</option>
                         <option value="modification_date">Modification date</option>
-                        {#each allDefinedFields as field}
-                            <option value={field}>{field}</option>
-                        {/each}
+                        {#if allDefinedFields.lenght > 0 }
+                            {#each allDefinedFields as field}
+                                <option value={field}>{field}</option>
+                            {/each}
+                        {/if}
                     </select>
                 </div>
             </div>
