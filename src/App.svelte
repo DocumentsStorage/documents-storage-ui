@@ -26,13 +26,11 @@
 	export let url = "";
 	export let showSettings = false;
 	export let isLogged = false;
-	export let rank = "";
 
 	$: checkRoute(window.location.pathname)
 
 	sessionInfo.subscribe((value) => {
 		isLogged = value.isLogged;
-		rank = value.rank;
 	});
 
 	function logout() {
@@ -188,7 +186,6 @@
 												</ModLink>
 											</Link>
 										</span>
-										{#if rank === "admin"}
 											<span
 												role="menuitem"
 												tabindex="-1"
@@ -201,7 +198,6 @@
 													</ModLink>
 												</Link>
 											</span>
-										{/if}
 										<span
 											role="menuitem"
 											tabindex="-1"
