@@ -1,6 +1,7 @@
 <script>
 	import { Router, Link, Route, navigate } from "svelte-routing";
 	import Cookies from "universal-cookie";
+    import notificationStore from "components/NotificationStore.js";
 
 	import Notification from "components/Notification.svelte";
 	import Button from "common/Button.svelte";
@@ -41,8 +42,21 @@
 		navigate("/", { replace: true });
 	}
 
+	async function getSessionNotifications(){
+		const response = await SendHTTPrequest({
+			endpoint: '/accounts/session/notifications',
+			method: 'GET'
+		})
+		const notifications = response.data.notifications.filter((element)=> { return !element.seen })
+		notifications.forEach((element)=>{
+			notificationStore.set({
+          		message: element.text,
+          		type: 'SUCCESS'
+        	})
+		})
+	}
+
 	async function updateToken(){
-	  console
       const response = await SendHTTPrequest({
         endpoint: '/token/update',
         method: 'POST'
@@ -74,6 +88,7 @@
 					updateToken();
 				}
 				sessionInfo.set({ isLogged: true, ...currentSessionInfo });
+				getSessionNotifications()
 			} else {
 				cookies.remove("authToken");
 			}
@@ -154,7 +169,7 @@
 							</div>
 							{#if showSettings && !fullScreenMenuOpen}
 								<div
-									class="origin-top-right absolute right-0 mt-2 w-56 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 focus:outline-none dark:bg-gray-800"
+									class="origin-top-right absolute right-0 mt-2 w-56 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 focus:outline-none dark:bg-gray-800 z-10"
 									role="menu"
 									aria-orientation="vertical"
 									aria-labelledby="menu-button"
