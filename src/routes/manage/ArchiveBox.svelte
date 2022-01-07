@@ -1,9 +1,9 @@
 <script>
         import { ArchiveBox, X } from 'phosphor-svelte';
-    
         import { createEventDispatcher } from 'svelte';
     
         export let fileSet = false;
+        export let fileName = "";
         const dispatch = createEventDispatcher();
     
         function convertFile(file) {
@@ -65,13 +65,13 @@
                 </div>
             {:else}
                 <div class="h-28 p-2 text-xl">
-                    <div class="my-2">Drop archive file here</div>
+                    <div class="my-2">Drop {fileName} archive file here</div>
                     Or
                 </div>
             {/if}
         </div>
         <div class="flex justify-center rounded bg-gray-300 dark:bg-gray-800 mt-2 py-1">
-            <div class="absolute">Click here to set</div>
+            <div class="absolute">Click here to choose it</div>
             <input
                 on:change={mediaInputHandler}
                 class="h-full w-full opacity-0"

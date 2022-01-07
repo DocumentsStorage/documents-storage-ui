@@ -36,6 +36,7 @@
                 {/each}
         {/if}
     </div>
+    <!-- svelte-ignore missing-declaration -->
     <p>App version: {APP_VERSION}</p>
   </div>
 </div>

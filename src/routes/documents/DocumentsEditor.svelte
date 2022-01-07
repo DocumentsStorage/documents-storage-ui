@@ -633,8 +633,8 @@
                     />
                 </div>
                 <small class="h-4 inline-block text-red-300">
-                    {#if $errors.fields[j]?.name}
-                        {$errors.fields[j]?.name}
+                    {#if $errors.fields[j].name}
+                        {$errors.fields[j].name}
                     {/if}
                 </small>
 
@@ -651,8 +651,8 @@
                     />
                 </div>
                 <small class="h-4 inline-block text-red-300">
-                    {#if $errors.fields[j]?.value}
-                        {$errors.fields[j]?.value}
+                    {#if $errors.fields[j].value}
+                        {$errors.fields[j].value}
                     {/if}
                 </small>
             </div>

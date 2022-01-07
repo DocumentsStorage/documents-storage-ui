@@ -131,7 +131,7 @@
                         <div class="w-2/3 ml-2">
                             <input
                                 class="dark:bg-gray-900 w-full font-bold px-2 my-1"
-                                on:change={() => changeTagName(tag._id?.$oid)}
+                                on:change={() => changeTagName(tag._id.$oid)}
                                 bind:value={tag.name}
                             />
                         </div>
@@ -160,7 +160,7 @@
     </ul>
     <div class="flex my-5 justify-center">
         {#if allTags}
-            {#if allTags[allTags.length - 1]?._id || allTags.length == 0}
+            {#if allTags[allTags.length - 1]._id || allTags.length == 0}
                 <span
                     on:click={startAddingTag}
                     class="bg-gray-200 dark:bg-gray-600 active:border-green-500 hover:border-green-400 hover:bg-green-500 duration-100 rounded-full px-6 py-2 flex items-center border cursor-pointer"
