@@ -66,7 +66,7 @@ import { FileMinus, Minus, Plus, X } from 'phosphor-svelte';
   }
 
   function loadDocumentType() {
-    if (currentDocumentType.fields.length > 0) {
+    if (currentDocumentType?.fields?.length > 0) {
       $form.title = currentDocumentType.title;
       $form.description = currentDocumentType.description;
       $form.fields = [];
@@ -265,8 +265,8 @@ import { FileMinus, Minus, Plus, X } from 'phosphor-svelte';
           />
         </div>
         <small class="h-4 inline-block text-red-300">
-          {#if $errors.fields[j].name}
-            {$errors.fields[j].name}
+          {#if $errors.fields[j]?.name}
+            {$errors.fields[j]?.name}
           {/if}
         </small>
 
@@ -283,8 +283,8 @@ import { FileMinus, Minus, Plus, X } from 'phosphor-svelte';
           </select>
         </div>
         <small class="h-4 text-red-300">
-          {#if $errors.fields[j].value_type}
-            {$errors.fields[j].value_type}
+          {#if $errors.fields[j]?.value_type}
+            {$errors.fields[j]?.value_type}
           {/if}
         </small>
       </div>

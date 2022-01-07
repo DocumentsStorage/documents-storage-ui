@@ -232,7 +232,7 @@
         id="username"
         name="username"
         autocomplete="username"
-        placeholder={currentAccount.username}
+        placeholder={currentAccount?.username}
         class="w-full dark:bg-gray-900 font-bold px-2"
         on:change={handleChange}
         bind:value={$form.username}

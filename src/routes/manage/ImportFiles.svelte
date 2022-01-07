@@ -53,7 +53,6 @@
                             : "Imported accounts successfully",
                     type: "SUCCESS",
                 });
-                file = null;
             } else if (response.status === 422) {
                 notificationStore.set({
                     message:
@@ -71,8 +70,8 @@
                     type: "ERROR",
                 });
             }
-        } else {
-            return [];
+            importAccountsFile = null;
+            importDocumentsFile = null;
         }
     }
 </script>
