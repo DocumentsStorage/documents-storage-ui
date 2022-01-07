@@ -5,6 +5,7 @@
   "scripts": {
     "build": "rollup -c",
     "dev": "rollup -c -w",
+    "lint": "eslint --fix src/**",
     "start": "sirv public --host 0.0.0.0 --no-clear --single"
   },
   "devDependencies": {
@@ -14,6 +15,9 @@
     "@rollup/plugin-replace": "^3.0.0",
     "autoprefixer": "^10.3.4",
     "dotenv": "^10.0.0",
+    "eslint": "^8.6.0",
+    "eslint-plugin-import": "^2.25.4",
+    "eslint-plugin-svelte3": "^3.3.0",
     "postcss": "^8.3.6",
     "rollup": "^2.3.4",
     "rollup-plugin-css-only": "^3.1.0",
@@ -33,5 +37,8 @@
     "svelte-routing": "^1.6.0",
     "universal-cookie": "^4.0.4",
     "yup": "^0.32.9"
+  },
+  "eslintConfig": {
+    "extends": "@sveltejs"
   }
 }

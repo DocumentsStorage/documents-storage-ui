@@ -32,7 +32,6 @@
                     <span
                         class="flex items-center pl-5 dark:text-white text-black"
                         on:click={() => {
-                            // eslint-disable-next-line @typescript-eslint/no-unused-vars
                             currentAccount = account;
                         }}
                     >Select

@@ -22,6 +22,7 @@ Top Features
 ===========
 Development
 ===========
+#. Best to use Node version: 16.13.1 (LTS)
 #. Install dependencies: ``npm i -include=dev``
 #. Copy .env.prod to .env file and configure it
 #. Start dev server ``npm run dev``

@@ -20,7 +20,7 @@
     function setupDocuments(loaded) {
         var documents = loaded.documents;
         documents = documents.map((document) => {
-            document.media_files = document.media_files?.map(
+            document.media_files = document.media_files.map(
                 (uuid) => uuid["$uuid"]
             );
             return document;
@@ -252,7 +252,6 @@
                             <span
                                 class="flex items-center pl-5 dark:text-white text-black cursor-pointer"
                                 on:click={() => {
-                                    // eslint-disable-next-line @typescript-eslint/no-unused-vars
                                     currentDocument = documentType;
                                 }}
                             >
