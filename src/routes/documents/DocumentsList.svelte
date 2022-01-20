@@ -233,26 +233,26 @@
                 </div>
             </div>
             {#if allDocuments.length > 0}
-                {#each allDocuments as documentType}
-                    <li class="flex h-16 bg-gray-200 dark:bg-gray-600 rounded mt-5 p-2">
+                {#each allDocuments as document}
+                    <li class="flex h-16 bg-gray-200 dark:bg-gray-600 rounded mt-5 p-2 { document === currentDocument && 'bg-gray-400 dark:bg-gray-400' }">
                         <!-- Stacked -->
                         <div class="w-full ml-2">
-                            <p>{documentType.title.length > 20
-                                ? documentType.title.slice(0, 20) +
+                            <p>{document.title.length > 20
+                                ? document.title.slice(0, 20) +
                                   "..."
-                                : documentType.title}</p>
+                                : document.title}</p>
                             <small
-                                >{documentType.description.length > 25
-                                    ? documentType.description.slice(0, 25) +
+                                >{document.description.length > 25
+                                    ? document.description.slice(0, 25) +
                                       "..."
-                                    : documentType.description}</small
+                                    : document.description}</small
                             >
                         </div>
                         <div class="mr-5 flex justify-end">
                             <span
                                 class="flex items-center pl-5 dark:text-white text-black cursor-pointer"
                                 on:click={() => {
-                                    currentDocument = documentType;
+                                    currentDocument = document;
                                 }}
                             >
                                 Select
