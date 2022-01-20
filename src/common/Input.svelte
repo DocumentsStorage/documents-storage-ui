@@ -13,6 +13,11 @@
         value = e.target.value;
         dispatch('changeValue', {value: e.target.value, index});
     };
+    
+    const handleKeyUp = (e) => {
+        value = e.target.value;
+        dispatch('keyup', e);
+    };
 </script>
 
-<input {name} {type} {placeholder} {value} step="any" class={classList}  on:input={handleInput} />
+<input {name} {type} {placeholder} {value} step="any" class={classList}  on:input={handleInput} on:keyup={handleKeyUp}/>

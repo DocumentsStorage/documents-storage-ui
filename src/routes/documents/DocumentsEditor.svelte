@@ -10,6 +10,7 @@
     import { onMount } from "svelte";
     import ActionsModal from "components/ActionsModal.svelte";
     import Button from "common/Button.svelte";
+    import InputHints from "common/InputHints.svelte";
 
     export let allDocuments;
     export let documentTypesList = [];
@@ -17,6 +18,7 @@
     export let currentDocumentType = "";
     export let currentDocument = null;
     export let editTitle = false;
+    export let hint = {index: null, hints: []}
 
     export let mediaThumbnailsList = [];
     export let mediaFilesList = [];
@@ -34,6 +36,10 @@
     $: currentDocumentType;
     $: currentDocument, loadDocument();
 
+    function reset_hint(){
+        hint={hints:[], index: null}
+    }
+
     function parseFieldTypeToHTMLType(value) {
         const type = typeof value;
         switch (type) {
@@ -49,6 +55,28 @@
 
     function InputChangeValue(e) {
         $form.fields[e.detail.index].value = e.detail.value;
+    }
+
+    async function getHints(search_text, index) {
+        if(search_text.length > 0){
+            const response = await SendHTTPrequest({
+            endpoint: `/documents/autofill?search_text=${search_text}&results_for=field`,
+            method: "GET",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            });
+            if (response.status === 200) {
+                hint = {
+                    index,
+                    hints: response.data.autofill
+                }
+            } else {
+                hint = {index: null, hints: []}
+            }
+        } else {
+            hint = {index: null, hints: []}
+        }
     }
 
     function toggleEditTitle(){
@@ -391,6 +419,7 @@
     }
 
     function startDeleteDocument() {
+        reset_hint();
         modalConfig = {
             show: true,
             title: `Delete ${currentDocument.title} document`,
@@ -612,7 +641,7 @@
         name="documentType"
         class="dark:bg-gray-900 font-bold px-2 py-1 col-span-3"
         bind:value={currentDocumentType}
-        on:change={changeDocumentType}
+        on:change={(e)=>{changeDocumentType(e); reset_hint();}}
     >
         <option value="" selected>Not selected Document Type</option>
         {#each documentTypesList as documentType}
@@ -648,7 +677,18 @@
                         on:change={handleChange}
                         on:blur={handleChange}
                         on:changeValue={InputChangeValue}
+                        on:keyup={(e)=>{getHints(field.value, j)}}
                     />
+                    {#if hint.index === j}
+                        {#if hint.hints.length > 0}
+                            <span class="w-full">
+                                <InputHints
+                                    bind:hints={hint.hints}
+                                    on:updateSearchText={(e)=>{field.value=e.detail.hint}}
+                                />
+                            </span>
+                        {/if}
+                    {/if}
                 </div>
                 <small class="h-4 inline-block text-red-300">
                     {#if $errors.fields[j]?.value}
@@ -660,7 +700,7 @@
                 <div class="h-24 flex flex-wrap content-center justify-end">
                     {#if $form.fields.length !== 1}
                         <span
-                            on:click={removeField(j)}
+                            on:click={()=>{removeField(j); reset_hint();}}
                             class="bg-gray-200 dark:bg-gray-600 active:border-yello-500 hover:border-yellow-400 hover:bg-yellow-500 duration-100 rounded-full px-3 sm:px-4 py-1 flex items-center border cursor-pointer"
                             ><Minus /></span
                         >
@@ -672,7 +712,7 @@
             <div class="flex justify-center">
                 {#if j === $form.fields.length - 1}
                     <span
-                        on:click={addField}
+                        on:click={()=>{addField; reset_hint();}}
                         class="bg-gray-200 dark:bg-gray-600 active:border-green-500 hover:border-green-400 hover:bg-green-500 duration-100 rounded-full px-6 py-2 flex items-center border cursor-pointer"
                         ><Plus /></span
                     >
@@ -684,6 +724,7 @@
         <div class="fixed bottom-4 mr-3">
             <input
                 type="submit"
+                on:click={()=>{reset_hint()}}
                 class="dark:bg-gray-800 dark:active:bg-gray-900 dark:text-white hover:text-green-400 duration-200 rounded-lg shadow-md py-2 px-10 cursor-pointer"
                 value={currentDocument ? "Update Document" : "Add Document"}
             />
