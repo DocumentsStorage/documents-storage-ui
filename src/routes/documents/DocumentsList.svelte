@@ -2,6 +2,7 @@
     import { SendHTTPrequest } from "services/api.js";
     import { onMount } from "svelte";
     import Button from "common/Button.svelte";
+    import DocumentsSearch from "./DocumentsSearch.svelte";
     import { CaretLeft, CaretRight, MagnifyingGlass, X, SortAscending, SortDescending } from "phosphor-svelte";
 
     export let allDefinedFields = [];
@@ -165,41 +166,14 @@
     });
 </script>
 
-<div class="rounded-md shadow-lg">
-    <ul class="mt-5">
+<div class="rounded-md shadow-lg pt-5">
         {#if allDocuments}
-            <form on:submit={(e)=> {e.preventDefault(); startSearchingDocuments()}} class="my-1 flex">
-                <span
-                    class="flex justify-center items-center
-                        {searching ? 'visible px-2 w-1/6' : 'invisible w-0'} transition-all"
-
-                    on:click={resetSearchingDocuments}
-                >
-                    <Button
-                        class="
-                        {searching ? 'visible px-2' : 'invisible w-0'} dark:bg-gray-900 border-gray-600 font-bold px-2 py-3 mx-2 flex justify-center items-center text-lg"
-                    >
-                        <span class="{searching ? 'visible' : 'invisible'}">
-                            <X />
-                        </span>
-                    </Button>
-                </span>
-                <input
-                    placeholder="Search"
-                    class="w-full dark:bg-gray-900 rounded font-bold border-gray-600 px-2 mx-2"
-                    bind:value={search_text}
-                />
-                <span
-                    class="flex justify-center items-center w-1/6"
-                    on:click={startSearchingDocuments}
-                >
-                    <Button
-                        class="dark:bg-gray-900 rounded font-bold border-gray-600 px-2 py-3 mx-2 flex justify-center items-center text-lg"
-                    >
-                        <MagnifyingGlass />
-                    </Button>
-                </span>
-            </form>
+            <DocumentsSearch 
+                bind:searching 
+                bind:search_text
+                on:resetSearchingDocuments={()=>{resetSearchingDocuments();}} 
+                on:startSearchingDocuments={()=>{startSearchingDocuments();}}
+            />
             <div class="flex mt-5">
                 <div class="w-3/5 text-sm">
                     <Button classList="w-2/3" size="sm" on:click={(e)=>{ order_ascending = !order_ascending;}}>
@@ -232,6 +206,7 @@
                     </select>
                 </div>
             </div>
+            <ul class="mt-5">
             {#if allDocuments.length > 0}
                 {#each allDocuments as document}
                     <li class="flex h-16 bg-gray-200 dark:bg-gray-600 rounded mt-5 p-2 { document === currentDocument && 'bg-gray-400 dark:bg-gray-400' }">
@@ -282,8 +257,9 @@
                     No Documents
                 </p>
             {/if}
+        </ul>
         {/if}
-    </ul>
+
 </div>
 
 
