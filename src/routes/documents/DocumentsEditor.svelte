@@ -507,7 +507,7 @@
         $errors.fields = $errors.fields.concat({ name: "", value: "" });
     };
 
-    export const removeField = (i) => () => {
+    export const removeField = (i) => {
         $form.fields = $form.fields.filter((u, j) => j !== i);
         $errors.fields = $errors.fields.filter((u, j) => j !== i);
     };
@@ -700,7 +700,7 @@
                 <div class="h-24 flex flex-wrap content-center justify-end">
                     {#if $form.fields.length !== 1}
                         <span
-                            on:click={()=>{removeField(j); reset_hint();}}
+                            on:click={()=>{reset_hint(); removeField(j);}}
                             class="bg-gray-200 dark:bg-gray-600 active:border-yello-500 hover:border-yellow-400 hover:bg-yellow-500 duration-100 rounded-full px-3 sm:px-4 py-1 flex items-center border cursor-pointer"
                             ><Minus /></span
                         >
@@ -712,7 +712,7 @@
             <div class="flex justify-center">
                 {#if j === $form.fields.length - 1}
                     <span
-                        on:click={()=>{addField; reset_hint();}}
+                        on:click={()=>{reset_hint(); addField();}}
                         class="bg-gray-200 dark:bg-gray-600 active:border-green-500 hover:border-green-400 hover:bg-green-500 duration-100 rounded-full px-6 py-2 flex items-center border cursor-pointer"
                         ><Plus /></span
                     >
