@@ -7,10 +7,10 @@
     const dispatch = createEventDispatcher();
     import Button from "common/Button.svelte";
 
-    export let classList = "";
     export let searching = false;
     export let search_text = "";
     export let hints = [];
+
     const handleStartSearchingDocuments = (e) => {
         dispatch('startSearchingDocuments', e);
     };

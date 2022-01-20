@@ -3,7 +3,6 @@
     import { CaretRight } from "phosphor-svelte";
     const dispatch = createEventDispatcher();
 
-    export let classList = "";
     export let hints = [];
 
     const handleUpdateSearchText = (hint) => {
