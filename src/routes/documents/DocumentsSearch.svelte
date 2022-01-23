@@ -10,6 +10,7 @@
     export let searching = false;
     export let search_text = "";
     export let hints = [];
+    let haveClickedHint
 
     const handleStartSearchingDocuments = (e) => {
         dispatch('startSearchingDocuments', e);
@@ -45,8 +46,8 @@
         on:click={handleResetSearchingDocuments}
     >
         <Button
-            class="
-            {searching ? 'visible px-2' : 'invisible w-0'} dark:bg-gray-900 border-gray-600 font-bold px-2 py-3 mx-2 flex justify-center items-center text-lg"
+            classList="
+            {searching ? 'visible' : 'invisible w-0'} dark:bg-gray-900 border-gray-600 font-bold py-3 flex justify-center items-center text-lg"
         >
             <span class="{searching ? 'visible' : 'invisible'}">
                 <X />
@@ -57,6 +58,8 @@
         placeholder="Search"
         class="w-full dark:bg-gray-900 rounded font-bold border-gray-600 px-2 mx-2"
         on:keyup={getHints}
+        on:focus={getHints}
+        on:focusout={()=>{haveClickedHint()}}
         bind:value={search_text}
     />
     <span
@@ -64,14 +67,14 @@
         on:click={handleStartSearchingDocuments}
     >
         <Button
-            class="dark:bg-gray-900 rounded font-bold border-gray-600 px-2 py-3 mx-2 flex justify-center items-center text-lg"
+            classList="dark:bg-gray-900 rounded font-bold border-gray-600 py-3 flex justify-center items-center text-lg"
         >
             <MagnifyingGlass />
         </Button>
     </span>
 </form>
-{#if hints.length > 0}
+{#if hints.length > 0 }
     <span class="w-full">
-        <InputHints bind:hints on:updateSearchText={(e)=>{search_text=e.detail.hint; hints=[]; handleStartSearchingDocuments();}} />
+        <InputHints bind:haveClickedHint bind:hints on:updateSearchText={(e)=>{search_text=e.detail.hint; hints=[]; handleStartSearchingDocuments();}} />
     </span>
 {/if}

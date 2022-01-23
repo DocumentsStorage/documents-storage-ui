@@ -10,11 +10,11 @@
 
     const dispatch = createEventDispatcher();
 
-    function proceed() {
+    export const proceed = () => {
         dispatch('proceed');
     }
 
-    function cancel() {
+    export const cancel = () =>  {
         dispatch('cancel');
     }
 

@@ -23,6 +23,7 @@
     export let mediaThumbnailsList = [];
     export let mediaFilesList = [];
     export let deletedMediaIds = [];
+    export let haveClickedHint = undefined;
 
     export let modalConfig = {
         show: false,
@@ -30,15 +31,10 @@
         message: "",
         cancelAction: "",
         proceedAction: "",
-        callback: null,
     };
 
     $: currentDocumentType;
     $: currentDocument, loadDocument();
-
-    function reset_hint(){
-        hint={hints:[], index: null}
-    }
 
     function parseFieldTypeToHTMLType(value) {
         const type = typeof value;
@@ -390,7 +386,7 @@
         }
     }
 
-    async function deleteDocument() {
+    export const  deleteDocument = async() => {
         modalConfig.show = false;
         const response = await SendHTTPrequest({
             endpoint: `/documents/${currentDocument._id.$oid}`,
@@ -419,7 +415,6 @@
     }
 
     function startDeleteDocument() {
-        reset_hint();
         modalConfig = {
             show: true,
             title: `Delete ${currentDocument.title} document`,
@@ -427,7 +422,7 @@
                 "This action is irreversible. Document will be deleted with all uploaded media files.",
             cancelAction: "Cancel",
             proceedAction: "Delete",
-            callback: deleteDocument,
+            callback: deleteDocument
         };
     }
 
@@ -606,7 +601,7 @@
                                 .name}
                         </p>
                         <span
-                            on:click={removeTag(j)}
+                            on:click={()=>{removeTag(j)}}
                             class="pr-2 py-1 flex items-center cursor-pointer"
                             ><X />
                         </span>
@@ -641,7 +636,7 @@
         name="documentType"
         class="dark:bg-gray-900 font-bold px-2 py-1 col-span-3"
         bind:value={currentDocumentType}
-        on:change={(e)=>{changeDocumentType(e); reset_hint();}}
+        on:change={(e)=>{changeDocumentType(e)}}
     >
         <option value="" selected>Not selected Document Type</option>
         {#each documentTypesList as documentType}
@@ -677,12 +672,15 @@
                         on:change={handleChange}
                         on:blur={handleChange}
                         on:changeValue={InputChangeValue}
-                        on:keyup={(e)=>{getHints(field.value, j)}}
+                        on:focus={()=>{field.valueType === "text" && getHints(field.value, j)}}
+                        on:keyup={()=>{field.valueType === "text" && getHints(field.value, j)}}
+                        on:focusout={()=>{haveClickedHint()}}
                     />
                     {#if hint.index === j}
                         {#if hint.hints.length > 0}
                             <span class="w-full">
                                 <InputHints
+                                    bind:haveClickedHint
                                     bind:hints={hint.hints}
                                     on:updateSearchText={(e)=>{field.value=e.detail.hint}}
                                 />
@@ -700,7 +698,7 @@
                 <div class="h-24 flex flex-wrap content-center justify-end">
                     {#if $form.fields.length !== 1}
                         <span
-                            on:click={()=>{reset_hint(); removeField(j);}}
+                            on:click={()=>{removeField(j)}}
                             class="bg-gray-200 dark:bg-gray-600 active:border-yello-500 hover:border-yellow-400 hover:bg-yellow-500 duration-100 rounded-full px-3 sm:px-4 py-1 flex items-center border cursor-pointer"
                             ><Minus /></span
                         >
@@ -712,7 +710,7 @@
             <div class="flex justify-center">
                 {#if j === $form.fields.length - 1}
                     <span
-                        on:click={()=>{reset_hint(); addField();}}
+                        on:click={()=>{addField()}}
                         class="bg-gray-200 dark:bg-gray-600 active:border-green-500 hover:border-green-400 hover:bg-green-500 duration-100 rounded-full px-6 py-2 flex items-center border cursor-pointer"
                         ><Plus /></span
                     >
@@ -724,7 +722,6 @@
         <div class="fixed bottom-4 mr-3">
             <input
                 type="submit"
-                on:click={()=>{reset_hint()}}
                 class="dark:bg-gray-800 dark:active:bg-gray-900 dark:text-white hover:text-green-400 duration-200 rounded-lg shadow-md py-2 px-10 cursor-pointer"
                 value={currentDocument ? "Update Document" : "Add Document"}
             />

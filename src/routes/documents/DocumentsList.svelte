@@ -3,7 +3,7 @@
     import { onMount } from "svelte";
     import Button from "common/Button.svelte";
     import DocumentsSearch from "./DocumentsSearch.svelte";
-    import { CaretLeft, CaretRight, MagnifyingGlass, X, SortAscending, SortDescending } from "phosphor-svelte";
+    import { CaretLeft, CaretRight, SortAscending, SortDescending } from "phosphor-svelte";
 
     export let allDefinedFields = [];
     export let allDocuments = [];

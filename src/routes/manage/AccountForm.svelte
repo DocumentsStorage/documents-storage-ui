@@ -14,7 +14,6 @@
     message: "",
     cancelAction: "",
     proceedAction: "",
-    callback: null,
   };
 
   function resetForm() {

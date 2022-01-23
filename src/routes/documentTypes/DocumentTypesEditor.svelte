@@ -14,7 +14,6 @@ import { FileMinus, Minus, Plus, X } from 'phosphor-svelte';
         message: '',
         cancelAction: '',
         proceedAction: '',
-        callback: null
     };
     
 

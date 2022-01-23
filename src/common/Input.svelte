@@ -20,4 +20,8 @@
     };
 </script>
 
-<input {name} {type} {placeholder} {value} step="any" class={classList}  on:input={handleInput} on:keyup={handleKeyUp}/>
+<input {name} {type} {placeholder} {value} step="any" class={classList} 
+    on:input={handleInput} on:keyup={handleKeyUp} 
+    on:focus={(e)=>{dispatch('focus', e)}}
+    on:focusout={(e)=>{dispatch('focusout', e)}}
+    />
