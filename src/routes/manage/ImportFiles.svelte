@@ -5,10 +5,13 @@
     import Button from "common/Button.svelte";
 
     export let rank = "user";
+    export let documentsArchiveSet = false;
+    export let accountsArchiveSet = false;
     export let importAccountsFile = null;
     export let importDocumentsFile = null;
     export let includeMediaInImport = true;
     export let includeDocumentsInImport = true;
+    export let overwriteDocuments = false;
 
     async function fileDocumentsDeleter() {
         importDocumentsFile = null;
@@ -34,7 +37,7 @@
 
         let url = "";
         if (fileType === "documents") {
-            url = `/import/documents?import_images=${includeMediaInImport}&import_documents=${includeDocumentsInImport}`;
+            url = `/import/documents?import_images=${includeMediaInImport}&import_documents=${includeDocumentsInImport}&import_overwrite=${overwriteDocuments}`;
         } else if (fileType === "accounts") {
             url = "/import/accounts";
         }
@@ -70,6 +73,8 @@
                     type: "ERROR",
                 });
             }
+            accountsArchiveSet = false;
+            documentsArchiveSet = false;
             importAccountsFile = null;
             importDocumentsFile = null;
         }
@@ -79,6 +84,7 @@
 <div class="my-5">
     <ArchiveBox
         fileName="Documents"
+        bind:fileSet={documentsArchiveSet}
         on:deleteFile={(file) => {
             fileDocumentsDeleter(file);
         }}
@@ -102,6 +108,14 @@
                 bind:checked={includeMediaInImport}
             />
             <p>Include media files</p>
+        </label>
+        <label class="my-5 inline-flex items-baseline cursor-pointer">
+            <input
+                class="mx-2 checked:bg-blue-700"
+                type="checkbox"
+                bind:checked={overwriteDocuments}
+            />
+            <p>Allow overwrite documents</p>
         </label> <br />
         <span on:click={() => uploadFileAPI(importDocumentsFile)} class="my-2">
             <Button disabled={!importDocumentsFile}>Import Documents</Button>
@@ -110,6 +124,7 @@
     {#if rank === "admin"}
         <div class="mt-10">
             <ArchiveBox
+                bind:fileSet={accountsArchiveSet}
                 fileName="Accounts"
                 on:deleteFile={(file) => {
                     fileAccountsDeleter(file);
