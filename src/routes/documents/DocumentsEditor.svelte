@@ -23,7 +23,7 @@
     export let mediaThumbnailsList = [];
     export let mediaFilesList = [];
     export let deletedMediaIds = [];
-    export let haveClickedHint = undefined;
+    let haveClickedHint
 
     export let modalConfig = {
         show: false,
@@ -369,11 +369,10 @@
                 return field;
             });
             data.tags = data.tags.map((id)=> {return {"$oid": id}})
-            
             allDocuments.push({
+                ...data,
                 _id: { $oid: response.data.id.$oid },
                 title: response.data.title,
-                ...data
             });
             allDocuments = allDocuments;
             currentDocument = null;
