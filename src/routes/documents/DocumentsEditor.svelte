@@ -510,7 +510,7 @@
         $form.tags = $form.tags.concat(tagId);
     };
 
-    export const removeTag = (i) => () => {
+    export const removeTag = (i) => {
         $form.tags = $form.tags.filter((u, j) => j !== i);
     };
 </script>
