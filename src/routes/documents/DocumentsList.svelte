@@ -208,7 +208,7 @@
             </div>
             <ul class="mt-5">
             {#if allDocuments.length > 0}
-                {#each allDocuments as document}
+                {#each allDocuments.filter((v, i)=> !v?.is_new ) as document}
                     <li class="flex h-16 bg-gray-200 dark:bg-gray-600 rounded mt-5 p-2 { document === currentDocument && 'bg-gray-400 dark:bg-gray-400' }">
                         <!-- Stacked -->
                         <div class="w-full ml-2">
@@ -235,6 +235,38 @@
                         </div>
                     </li>
                 {/each}
+                {#if allDocuments.filter((v, i)=> v?.is_new).length > 0}
+                    <br/>
+                    <h2 class="text-center text-xl my-2">New Documents</h2>
+                    <hr/>
+                    {#each allDocuments.filter((v, i)=> v?.is_new ) as document}
+                        <li class="flex h-16 bg-gray-200 dark:bg-gray-600 rounded mt-5 p-2 { document === currentDocument && 'bg-gray-400 dark:bg-gray-400' }">
+                            <!-- Stacked -->
+                            <div class="w-full ml-2">
+                                <p>{document.title.length > 20
+                                    ? document.title.slice(0, 20) +
+                                    "..."
+                                    : document.title}</p>
+                                <small
+                                    >{document.description.length > 25
+                                        ? document.description.slice(0, 25) +
+                                        "..."
+                                        : document.description}</small
+                                >
+                            </div>
+                            <div class="mr-5 flex justify-end">
+                                <span
+                                    class="flex items-center pl-5 dark:text-white text-black cursor-pointer"
+                                    on:click={() => {
+                                        currentDocument = document;
+                                    }}
+                                >
+                                    Select
+                                </span>
+                            </div>
+                        </li>
+                    {/each}
+                {/if}
                 <div class="flex justify-between py-5 px-2">
                     <small>
                         Total: {totalDocumentsCount}, Page: {currentPage + 1} / {Math.ceil(

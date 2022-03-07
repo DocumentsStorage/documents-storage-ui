@@ -373,6 +373,7 @@
                 ...data,
                 _id: { $oid: response.data.id.$oid },
                 title: response.data.title,
+                is_new: true
             });
             allDocuments = allDocuments;
             currentDocument = null;
