@@ -12,6 +12,7 @@
     export let currentPage = 0;
     export let currentDocument;
     export let search_text = "";
+    export let selected_tags = [];
     export let searching = false;
     export let order_ascending = true;
     export let order_by = "creation_date";
@@ -30,12 +31,14 @@
         allDocuments = documents;
     }
 
-    function getOrderBy(){
-        return `&order_by=${order_by}&order=${order_ascending ? '+1' : '-1'}`
+    function getOrderedFiltered(){
+        var sel = ""
+        selected_tags.map((v)=>{sel += "&tag_ids=" + v._id.$oid })
+        return `&order_by=${order_by}&order=${order_ascending ? '+1' : '-1'}${sel}`
     }
 
     async function loadSortedDocuments(skip=0, limit=perPage){
-        const query = getOrderBy()
+        const query = getOrderedFiltered()
         if(searching){
             const loaded = await loadSearchDocuments(skip, limit, query);
             if(loaded){
@@ -53,7 +56,7 @@
         }
     }
 
-    async function loadListDocuments(skip, limit, order=getOrderBy()) {
+    async function loadListDocuments(skip, limit, order=getOrderedFiltered()) {
         const response = await SendHTTPrequest({
             endpoint: `/documents?skip=${skip}&limit=${limit + order}`,
             method: "GET",
@@ -68,7 +71,7 @@
         }
     }
 
-    async function loadSearchDocuments(skip, limit, order=getOrderBy()) {
+    async function loadSearchDocuments(skip, limit, order=getOrderedFiltered()) {
         let query = "";
         for (const word of search_text.split(" ")) {
             query += `&search_text=${word}`;
@@ -91,6 +94,7 @@
     async function resetSearchingDocuments() {
         searching = false;
         search_text = "";
+        
         const loaded = await loadListDocuments(0, perPage);
         if (loaded) {
             totalDocumentsCount = loaded.total;
@@ -99,7 +103,7 @@
     }
 
     async function startSearchingDocuments() {
-        if (search_text.length > 0) {
+        if (search_text.length > 0 || selected_tags.length > 0 ) {
             searching = true;
             const loaded = await loadSearchDocuments(0, perPage);
             if (loaded) {
@@ -171,6 +175,7 @@
             <DocumentsSearch 
                 bind:searching 
                 bind:search_text
+                bind:selected_tags
                 on:resetSearchingDocuments={()=>{resetSearchingDocuments();}} 
                 on:startSearchingDocuments={()=>{startSearchingDocuments();}}
             />
