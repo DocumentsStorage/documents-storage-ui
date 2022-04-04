@@ -1,5 +1,5 @@
 <script>
-    import { MagnifyingGlass, X } from "phosphor-svelte";
+    import { MagnifyingGlass, X, CaretRight} from "phosphor-svelte";
     import { createEventDispatcher, onMount } from 'svelte';
     import InputHints from "common/InputHints.svelte";
     import { SendHTTPrequest } from "services/api.js";
@@ -10,8 +10,10 @@
     export let searching = false;
     export let search_text = "";
     export let hints = [];
-    export let tags = [];
+    let tags = [];
     export let selected_tags = [];
+    let tags_loaded_current_limit = 0;
+    let all_tags_count = 0;
     let haveClickedHint;
 
     const handleStartSearchingDocuments = (e) => {
@@ -56,21 +58,28 @@
         }
     }
 
-    async function getTags() {
+    async function loadMoreTags() {
         const tagsResponse = await SendHTTPrequest({
-            endpoint: '/tags/list',
+            endpoint: `/tags/list?limit=5&skip=${tags_loaded_current_limit}`,
             method: "GET",
             headers: {
                 "Content-Type": "application/json",
             },
         });
         if (tagsResponse.status === 200){
-            tags = tagsResponse.data.tags 
+            if(tags.length>0){
+                tags.push(...tagsResponse.data.tags)
+                tags = tags
+            } else {
+                tags = tagsResponse.data.tags
+                all_tags_count = tagsResponse.data.total
+            }
+            tags_loaded_current_limit += 7;
         }
     }
 
     onMount(async () => {
-        getTags()
+        loadMoreTags()
     })
 
 </script>
@@ -109,17 +118,24 @@
         </Button>
     </span>
 </form>
-<span class="flex overflow-x-auto">
+<span class="flex overflow-x-auto my-8">
     {#each selected_tags as tag}
-        <span class="dark:bg-gray-500 flex-none rounded-xl text-sm border-gray-600 font-bold py-2 px-2 mx-2 cursor-pointer" on:click={(e)=>{unselectTag(tag)}}>
+        <span class="dark:bg-gray-900 flex-none rounded-xl text-sm border-gray-600 font-bold py-2 px-2 mx-2 cursor-pointer" on:click={(e)=>{unselectTag(tag)}}>
             {tag.name}
         </span>
     {/each}
     {#each tags as tag}
-        <span class="dark:bg-gray-900 flex-none rounded-xl text-sm border-gray-600 font-bold py-2 px-2 mx-2 cursor-pointer" on:click={(e)=>{selectTag(tag)}}>
+        <span class="dark:bg-gray-500 flex-none rounded-xl text-sm border-gray-600 font-bold py-2 px-2 mx-2 cursor-pointer" on:click={(e)=>{selectTag(tag)}}>
             {tag.name}
         </span>
     {/each}
+    {#if all_tags_count>tags_loaded_current_limit}
+    <span class="dark:bg-gray-400 flex-none rounded-xl text-sm border-gray-600 font-bold py-2 px-2 mx-2 cursor-pointer" on:click={()=>{loadMoreTags()}}>
+        <div class="flex justify-center items-center">
+            Load More Tags <CaretRight/>
+        </div>
+    </span>
+    {/if}
 </span>
 {#if hints.length > 0 }
     <span class="w-full">

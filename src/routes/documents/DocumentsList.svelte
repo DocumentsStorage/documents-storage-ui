@@ -110,6 +110,8 @@
                 totalDocumentsCount = loaded.total;
                 setupDocuments(loaded);
             }
+        } else {
+            resetSearchingDocuments()
         }
     }
 
