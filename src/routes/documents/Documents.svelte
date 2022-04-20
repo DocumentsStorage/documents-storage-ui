@@ -15,7 +15,7 @@
         <Link to="/document-types" class="mx-5"><Button>Document types</Button></Link>
         <Link to="/tags" class="mx-5"><Button>Tags</Button></Link>
     </div>
-    <div class="grid sm:grid-cols-4 gap-5 sm:gap-20 md:gap-10">
+    <div class="w-full md:lg:xl:2xl:grid sm:grid-cols-4 gap-5 sm:gap-20 md:gap-10">
         <div class="col-span-2">
             <DocumentsList bind:currentDocument bind:allDocuments />
         </div>
