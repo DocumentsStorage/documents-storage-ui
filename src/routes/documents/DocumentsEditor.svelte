@@ -163,6 +163,7 @@
             await media_files.map(async (media_id) => {
                 const result = await SendHTTPrequest({
                     endpoint: `/media/${media_id}`,
+                    timeout: 50000,
                     method: "GET",
                 });
                 return { file: result.data, id: media_id };
@@ -236,6 +237,7 @@
             if (data.getAll("media_files").length > 0) {
                 const response = await SendHTTPrequest({
                     endpoint: "/media",
+                    timeout: 50000,
                     method: "POST",
                     data,
                 });
@@ -298,6 +300,7 @@
 
         const response = await SendHTTPrequest({
             endpoint: `/documents/${data._id.$oid}`,
+            timeout: 50000,
             method: "PUT",
             headers: {
                 "Content-Type": "application/json",
@@ -345,6 +348,7 @@
         }
         const response = await SendHTTPrequest({
             endpoint: "/documents",
+            timeout: 50000,
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
