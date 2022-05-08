@@ -1,5 +1,5 @@
 <script>
-import { DownloadSimple, X } from 'phosphor-svelte';
+    import { DownloadSimple, X, Sparkle } from 'phosphor-svelte';
 
     import { createEventDispatcher } from 'svelte';
 
@@ -78,9 +78,13 @@ import { DownloadSimple, X } from 'phosphor-svelte';
                             target="_blank"
                             href={mediaFilesList[i].file}
                             class="absolute visited:text-green-400 bottom-0 right-0 pr-2 cursor-pointer"
-                        >
+                        >   
                             <DownloadSimple class="text-xl rounded bg-gray-600 duration-100 hover:text-green-400 hover:bg-green-100"/>
                         </a>
+                        {:else}
+                            {#if media.id == null}
+                                <small class="text-xs my-2 rounded flex items-center text-center dark:bg-gray-900"><p class="mr-1">New File</p><Sparkle/></small>
+                            {/if}
                         {/if}
                     </div>
                 </div>

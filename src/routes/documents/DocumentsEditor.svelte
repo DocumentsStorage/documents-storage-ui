@@ -154,7 +154,6 @@
         let file = event.detail ? event.detail : event;
         const blob = new Blob([file], { type: file.type });
         mediaFilesList = [...mediaFilesList, { file }];
-        console.log(mediaFilesList)
         await createThumbnail(blob);
     }
 
