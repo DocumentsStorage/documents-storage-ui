@@ -3,6 +3,7 @@
 
     import { createEventDispatcher } from 'svelte';
 
+    export let currentDocument;
     export let mediaThumbnailsList;
     export let mediaFilesList;
     export let deletedMediaIds;
@@ -75,7 +76,7 @@
                         </div>
                         {#if mediaFilesList[i].file.length > 0}
                         <a
-                            target="_blank"
+                            download={currentDocument._id.$oid+"-"+i} 
                             href={mediaFilesList[i].file}
                             class="absolute visited:text-green-400 bottom-0 right-0 pr-2 cursor-pointer"
                         >   

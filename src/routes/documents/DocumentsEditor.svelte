@@ -627,6 +627,7 @@
         {/each}
     </select>
     <MediaFilesBox
+        bind:currentDocument
         bind:mediaThumbnailsList
         bind:mediaFilesList
         bind:deletedMediaIds
