@@ -1,6 +1,8 @@
 =================
 Documents Storage
 =================
+.. image:: https://snyk.io/test/github/DocumentsStorage/documents-storage-ui/badge.svg
+    :target: https://snyk.io/test/github/DocumentsStorage/documents-storage-ui
 
 Project enforces you with simple web-based app which allow you to easily manage documents.
 For example storage important invoices, receipts, certificates, also add scans of those documents.
