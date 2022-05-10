@@ -35,7 +35,7 @@
     "sirv-cli": "^1.0.0",
     "snyk": "^1.922.0",
     "svelte-forms-lib": "^1.10.6",
-    "svelte-preprocess": "^4.9.4",
+    "svelte-preprocess": "^4.10.6",
     "svelte-routing": "^1.6.0",
     "universal-cookie": "^4.0.4",
     "yup": "^0.32.9"
