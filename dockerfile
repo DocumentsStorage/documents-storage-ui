@@ -6,9 +6,6 @@ LABEL version="0.8.4"
 # Set working directory.
 RUN mkdir /documents-storage-ui
 WORKDIR /documents-storage-ui
-# Set user
-RUN groupadd -r documents-storage && useradd --no-log-init -r -g documents-storage documents-storage
-USER documents-storage
 
 # Copy app dependencies.
 COPY package*.json /documents-storage-ui/
@@ -23,6 +20,9 @@ COPY . /documents-storage-ui
 RUN npm run build
 
 ### Stage 2: delivery ###
+# Set user
+RUN addgroup -S documents-storage && adduser -S documents-storage -G documents-storage
+USER documents-storage
 
 EXPOSE 5000
 CMD ["npm", "start"]
