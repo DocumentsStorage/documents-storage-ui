@@ -1,11 +1,14 @@
 ### Stage 1: build ###
 FROM node:17.8-alpine as builder
-MAINTAINER Daniel Goliszewski "taafeenn@gmail.com"
-LABEL version="0.8.2"
+LABEL maintainer="Daniel Goliszewski taafeenn@gmail.com"
+LABEL version="0.8.4"
 
 # Set working directory.
 RUN mkdir /documents-storage-ui
 WORKDIR /documents-storage-ui
+# Set user
+RUN groupadd -r documents-storage && useradd --no-log-init -r -g documents-storage documents-storage
+USER documents-storage
 
 # Copy app dependencies.
 COPY package*.json /documents-storage-ui/
