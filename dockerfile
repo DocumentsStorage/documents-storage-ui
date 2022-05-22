@@ -1,20 +1,23 @@
 ### Stage 1: build ###
 FROM node:17.8-alpine as builder
 LABEL maintainer="Daniel Goliszewski taafeenn@gmail.com"
-LABEL version="0.9.0"
+LABEL version="0.9.1"
 
 # Set working directory.
-RUN mkdir /documents-storage-ui
-WORKDIR /documents-storage-ui
+WORKDIR /usr/src/app/documents-storage-ui
+
+ENV API_URL="http://localhost:8000"
+ 
+RUN printf "API_URL=$API_URL" > .env
 
 # Copy app dependencies.
-COPY package*.json /documents-storage-ui/
+COPY package*.json .
 
 # Install app dependencies.
 RUN npm install
 
 # Copy app files.
-COPY . /documents-storage-ui
+COPY . .
 
 # Build app
 RUN npm run build
