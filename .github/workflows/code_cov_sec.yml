@@ -1,5 +1,5 @@
 name: Code Security
-on: push
+on: pull_request
 jobs:
   code_security:
     runs-on: ubuntu-latest
