@@ -41,35 +41,26 @@
         } else if (fileType === "accounts") {
             url = "/import/accounts";
         }
-
         if (data.getAll("archive_file").length > 0) {
             const response = await SendHTTPrequest({
                 endpoint: url,
                 method: "POST",
                 data,
             });
-            if (response.status === 200) {
+            if (response.status === 201) {
                 notificationStore.set({
                     message:
                         fileType === "documents"
-                            ? "Imported documents successfully"
-                            : "Imported accounts successfully",
+                            ? "Sent files to import documents, check notifications for more information"
+                            : "Sent files to import accounts, check notifications for more information",
                     type: "SUCCESS",
-                });
-            } else if (response.status === 422) {
-                notificationStore.set({
-                    message:
-                        fileType === "documents"
-                            ? "Could not import documents, there might be some duplicates in data."
-                            : "Could not import accounts, there might be some duplicates in data.",
-                    type: "ERROR",
                 });
             } else {
                 notificationStore.set({
                     message:
                         fileType === "documents"
-                            ? "Could not import documents."
-                            : "Could not import accounts.",
+                            ? "Could not start importing documents"
+                            : "Could not start importing accounts",
                     type: "ERROR",
                 });
             }
@@ -135,7 +126,7 @@
             />
         </div>
         <div class="mt-7">
-            <span on:click={() => uploadFileAPI(importAccountsFile)} class="my-2">
+            <span on:click={() => uploadFileAPI(importAccountsFile, "accounts")} class="my-2">
                 <Button disabled={!importAccountsFile}>Import Accounts</Button>
             </span> <br />
         </div>

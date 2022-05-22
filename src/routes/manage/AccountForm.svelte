@@ -92,7 +92,7 @@
         type: "SUCCESS",
       });
       allAccounts = allAccounts.filter(
-        (account) => account.username !== currentAccount.username
+        (account) => account._id.$oid !== currentAccount._id.$oid
       );
       resetForm();
     } else if (response.status === 404) {
@@ -225,6 +225,9 @@
         </span>
       {/if}
     </div>
+    {#if currentAccount}
+      <small>ID: {currentAccount._id.$oid}</small>
+    {/if}
     <div class="col-span-3">
       <label class="my-2" for="username">Username</label>
       <input

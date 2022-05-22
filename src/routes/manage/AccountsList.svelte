@@ -33,10 +33,9 @@
                         class="flex items-center pl-5 dark:text-white text-black"
                         on:click={() => {
                             currentAccount = account;
-                        }}
-                    >Select
-                        </span
-                    >
+                        }}>
+                    Select
+                    </span>
                 </div>
             </li>
         {/each}
