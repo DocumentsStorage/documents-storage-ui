@@ -8,16 +8,14 @@ WORKDIR /usr/src/app/documents-storage-ui
 
 ENV API_URL="http://localhost:8000"
  
+# Copy app files.
+COPY . .
+
 RUN printf "API_URL=$API_URL" > .env
 
-# Copy app dependencies.
-COPY package*.json .
 
 # Install app dependencies.
 RUN npm install
-
-# Copy app files.
-COPY . .
 
 # Build app
 RUN npm run build
