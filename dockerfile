@@ -12,11 +12,8 @@ ENV API_URL ${API_URL}
 # Copy app files.
 COPY . .
 
-# Install app dependencies.
+# Install deps
 RUN npm install
-
-# Build app
-RUN npm run build
 
 ### Stage 2: delivery ###
 # Set user
@@ -25,4 +22,4 @@ RUN chown -R 1500:1500 /usr/src/app/documents-storage-ui
 USER documents-storage
 
 EXPOSE 5000
-CMD printf "API_URL=${API_URL}" > .env ; npm start
+CMD printf "API_URL=${API_URL}" > .env ; source .env ; npm run build ; npm start
