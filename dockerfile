@@ -1,18 +1,16 @@
 ### Stage 1: build ###
-FROM node:17.8-alpine as builder
+FROM node:17.8-alpine
 LABEL maintainer="Daniel Goliszewski taafeenn@gmail.com"
 LABEL version="0.9.1"
 
 # Set working directory.
 WORKDIR /usr/src/app/documents-storage-ui
 
-ENV API_URL="http://localhost:8000"
- 
+ARG API_URL
+ENV API_URL ${API_URL}
+
 # Copy app files.
 COPY . .
-
-RUN printf "API_URL=$API_URL" > .env
-
 
 # Install app dependencies.
 RUN npm install
@@ -22,8 +20,9 @@ RUN npm run build
 
 ### Stage 2: delivery ###
 # Set user
-RUN addgroup -S documents-storage && adduser -S documents-storage -G documents-storage
+RUN addgroup -S documents-storage && adduser -u 1500 -S documents-storage -G documents-storage
+RUN chown -R 1500:1500 /usr/src/app/documents-storage-ui
 USER documents-storage
 
 EXPOSE 5000
-CMD ["npm", "start"]
+CMD printf "API_URL=${API_URL}" > .env ; npm start
