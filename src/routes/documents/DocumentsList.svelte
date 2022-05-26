@@ -72,11 +72,7 @@
     }
 
     async function loadSearchDocuments(skip, limit, order=getOrderedFiltered()) {
-        let query = "";
-        for (const word of search_text.split(" ")) {
-            query += `&search_text=${word}`;
-        }
-
+        const query = `&search_text=${search_text}`;
         const response = await SendHTTPrequest({
             endpoint: `/documents?skip=${skip}&limit=${limit + query + order}`,
             method: "GET",
