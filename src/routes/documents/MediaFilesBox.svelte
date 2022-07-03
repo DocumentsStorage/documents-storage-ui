@@ -106,7 +106,7 @@
             type="file"
             name="uploadedFile"
             id="uploadedFile"
-            accept="image/*, application/pdf"
+            accept="image/*, .pdf, text/*"
             multiple
         />
     </div>

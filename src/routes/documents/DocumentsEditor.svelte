@@ -140,17 +140,37 @@
     }
 
     async function createThumbnail(blob, id) {
-        if (blob.type === "application/pdf") {
+        let url
+        if (blob.type === ".pdf") {
             const temp_url = URL.createObjectURL(blob);
             const thumbnail = await createThumbnailPDF(temp_url);
             const base64Response = await fetch(thumbnail.thumbnail);
             blob = await base64Response.blob();
+            url = URL.createObjectURL(blob);
         }
-        const url = URL.createObjectURL(blob);
+        if (!blob.type.match(/image\/\w+/gm)) {
+            var canvas = document.createElement("canvas")
+            canvas.width = 500
+            canvas.height = 300
+            var ctx = canvas.getContext("2d");
+            ctx.beginPath();
+            ctx.rect(0, 0, 500, 300);
+            ctx.fillStyle = "#1F2937";
+            ctx.fill();
+            ctx.fillStyle = "white"
+            ctx.font = "30px Poppins";
+            ctx.textAlign = "center";
+            let text = blob.type.match(/application\/([\s\S]*)$/) ? blob.type.match(/application\/([\s\S]*)$/)[1] : blob.type
+            ctx.fillText(text, 250, 150);
+            url = canvas.toDataURL("image/jpg", 0.50)
+        } else {
+            url = URL.createObjectURL(blob);
+        }
         mediaThumbnailsList = [...mediaThumbnailsList, { url, id }];
     }
 
     async function mediaConverter(event) {
+        console.log(event)
         let file = event.detail ? event.detail : event;
         const blob = new Blob([file], { type: file.type });
         mediaFilesList = [...mediaFilesList, { file }];
